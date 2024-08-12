@@ -1,2 +1,2 @@
 
-https://tb.rg-adguard.net/public.php
+[windows] (https://tb.rg-adguard.net/public.php)
