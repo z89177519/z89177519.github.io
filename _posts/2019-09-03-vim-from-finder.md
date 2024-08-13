@@ -5,7 +5,7 @@ subtitle: 'Open file with terminal Vim from the macOS Finder'
 author: "Hux"
 header-style: text
 tags:
-  - Vim
+  - MAC 0S
 ---
 
 我的日常主力编辑器主要是：
