@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "win 操作系统下载"
+title: "windows systemdownload"
 subtitle: 'download win'
-author: "Hux"
+author: "colin.zeng"
 header-style: text
 tags:
   - windows
