@@ -1,6 +1,5 @@
 ---
 title: "windows download"
-subtitle: "「数据表示」待写"
 layout: post
 author: "Hux"
 header-style: text
