@@ -6,7 +6,7 @@ author: "Hux"
 published: false
 header-style: text
 tags:
-  - CS Idols
+  - other
 ---
 
 > - [wiki](https://en.wikipedia.org/wiki/Peter_Landin)
