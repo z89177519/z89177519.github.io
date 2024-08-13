@@ -1,12 +1,10 @@
 ---
 layout: post
-title: "测试 测试  测试"
+title: "test test "
 subtitle: 'test'
 header-style: text
 tags:
   - MAC 0S
 ---
 
-
-
-测试
+test
