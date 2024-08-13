@@ -7,4 +7,4 @@ header-style: text
 tags:
   - windows
 ---
-www.baidu.com
+https://tb.rg-adguard.net/public.php
