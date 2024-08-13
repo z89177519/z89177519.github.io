@@ -4,7 +4,6 @@ SEOTitle: Colin的博客 | Colin Blog
 header-img: img/home-bg.jpg
 email: 89177519@qq.com
 description: "blog"
-#keyword: "黄玄, Hux黄玄, Hux, 鬼栈, huxpro, @huxpro, 黄玄的博客, Hux Blog, 博客, 个人网站, 互联网, Web, JavaScript, React, React Native, 前端, 设计"
 url: "https://z89177519.github.io" # your host, for absolute URL
 baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
 
@@ -63,11 +62,6 @@ netease_comment: false
 # Analytics settings
 # Baidu Analytics
 # ba_track_id: [your track id]
-
-# Google Analytics
-ga_track_id: "UA-49627206-1" # Format: UA-xxxxxx-xx
-ga_domain: huangxuan.me
-
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
 sidebar-about-description: "要做一个有 swag 的网络管理员 <br> React Team @ Meta"
