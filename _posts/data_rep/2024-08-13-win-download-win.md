@@ -4,7 +4,7 @@ title: "windows system download"
 subtitle: 'download windows'
 date: 2024-08-13
 author: "colin.zeng"
-header-style: bg-walle.jpg
+header-style: compressing images
 catalog: true
 tags:
   - windows
