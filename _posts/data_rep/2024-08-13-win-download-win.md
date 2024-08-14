@@ -1,10 +1,11 @@
 ---
 layout: post
-title: "windows systemdownload"
-subtitle: 'download win'
+title: "windows system download"
+subtitle: 'download windows'
 date: 2024-08-13
 author: "colin.zeng"
-header-style: text
+header-style: bg-walle.jpg
+catalog: true
 tags:
   - windows
 ---
