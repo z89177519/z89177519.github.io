@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "文件替换"
+title: "文本替换"
 subtitle: 'share'
 date: 2024-09-05
 header-style: bg-walle.jpg                ###这篇文章标题背景图片
