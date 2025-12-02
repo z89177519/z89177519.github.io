@@ -38,8 +38,8 @@ menu:
     url: /pages/search.html
   - title: 友链
     url: /pages/links.html
-  - title: 留言
-    url: /pages/chat.html
+ # - title: 留言
+ #   url: /pages/chat.html
   - title: 关于
     url: /pages/about.html
 
@@ -62,7 +62,8 @@ links:
     url: https://files.rg-adguard.net/
   - title: vmware
     url: https://www.dinghui.org/
-  - title: 春风十里
-    url: https://www.geek-era.com
+#  - title: 春风十里
+#    url: https://www.geek-era.com
+
 
 
