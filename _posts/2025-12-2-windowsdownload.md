@@ -1,6 +1,6 @@
 ---
 layout: mypost
-title: "windows"
+title: "windows11"
 categories: [windows]
 ---
 
