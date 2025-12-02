@@ -4,11 +4,11 @@ title: "iso 下载"
 categories: [image]
 ---
 
-# Windows 11 下载地址
+# ios 下载地址
 
-微软官方 Windows 11 下载页面：
+IOS下载页面：
 
-[https://www.microsoft.com/zh-cn/software-download/windows11](https://cios.dhitechnical.com/VM/)
+[下载地址](https://cios.dhitechnical.com/VM/)
 
 username：cios
-Password: SuperSecrePassword
+Password: SuperSecretPassword
