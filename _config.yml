@@ -38,7 +38,7 @@ menu:
     url: /pages/search.html
   - title: 友链
     url: /pages/links.html
-  - title: 留言
+ # - title: 留言
  #   url: /pages/chat.html
   - title: 关于
     url: /pages/about.html
@@ -68,6 +68,7 @@ links:
     url: https://sysin.org/
   - title:  网工格物
     url: https://songxwn.com/
+
 
 
 
