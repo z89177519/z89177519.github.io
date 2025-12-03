@@ -5,7 +5,7 @@ title: 留言板
 
 <p>留言功能已迁移到"吐个槽"，页面将在 <span id="countdown">3</span> 秒后跳转...</p>
 
-<p><a href="{{ site.tucaoUrl }}">如未跳转请手动点击这里</a></p>
+<p><a id="manualLink" href="{{ site.tucaoUrl }}">如未跳转请手动点击这里</a></p>
 
 <!-- Giscus 评论系统 -->
 <div id="giscus"></div>
@@ -27,16 +27,23 @@ title: 留言板
 
 <!-- 倒计时跳转 -->
 <script type="text/javascript">
-  var seconds = 3; // 倒计时秒数
-  var countdownElem = document.getElementById('countdown');
+document.addEventListener("DOMContentLoaded", function() {
+    var seconds = 3; // 倒计时秒数
+    var countdownElem = document.getElementById('countdown');
+    var manualLink = document.getElementById('manualLink');
 
-  var interval = setInterval(function() {
-    seconds--;
-    countdownElem.textContent = seconds;
-    if (seconds <= 0) {
-      clearInterval(interval);
-      window.location.href = '{{ site.tucaoUrl }}';
-    }
-  }, 1000);
+    // 确保手动点击正常工作
+    manualLink.addEventListener('click', function() {
+        window.location.href = manualLink.href;
+    });
+
+    var interval = setInterval(function() {
+        seconds--;
+        countdownElem.textContent = seconds;
+        if (seconds <= 0) {
+            clearInterval(interval);
+            window.location.href = manualLink.href;
+        }
+    }, 1000);
+});
 </script>
-
