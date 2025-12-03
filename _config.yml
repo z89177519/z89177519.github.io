@@ -20,7 +20,7 @@ exclude: ['CNAME', 'README.md', 'LICENSE', '_site', 'dist', 'Gemfile', 'Gemfile.
 
 # 域名配置
 # baseurl配置,如果网站部署在根目录下的其他目录中，请设置为 /目录名
-# domainUrl: 'https://blog.tmaize.net'
+# domainUrl: 'https://z89177519.github.io/tucao.html'
 baseurl: ''
 
 # 吐个槽地址，会在chat页面中重定向到该地址
@@ -68,6 +68,7 @@ links:
     url: https://sysin.org/
   - title:  网工格物
     url: https://songxwn.com/
+
 
 
 
