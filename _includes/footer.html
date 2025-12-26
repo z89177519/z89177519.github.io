@@ -2,14 +2,11 @@
   <span>{{ site.footerText }}</span>
   <a href="{{ site.baseurl }}/static/xml/rss.xml">RSS订阅</a>
 
-  {%- comment %}
-  <span>Theme By</span>
-  <a href="https://baidu.com">TMaize</a>
-  {% endcomment %}
-
   {%- if site.extCount %}
     <span>总访问量</span>
     <span id="busuanzi_value_site_pv"></span>
+    <span>| 访客数</span>
+    <span id="busuanzi_value_site_uv"></span>
   {% endif %}
 
   <div class="footer-btn theme-toggler hide">
@@ -19,4 +16,10 @@
     <i class="svg-icon icon-arrow-top"></i>
   </div>
 </footer>
+
+<script
+  async
+  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
 
