@@ -2,11 +2,14 @@
   <span>{{ site.footerText }}</span>
   <a href="{{ site.baseurl }}/static/xml/rss.xml">RSS订阅</a>
 
-  {%- if site.extCount %}
-    <span>总访问量</span>
-    <span id="busuanzi_value_site_pv"></span>
-    <span>| 访客数</span>
-    <span id="busuanzi_value_site_uv"></span>
+  {% if site.extCount %}
+    <span id="busuanzi_container_site_pv">
+      总访问量 <span id="busuanzi_value_site_pv"></span>
+    </span>
+    <span>|</span>
+    <span id="busuanzi_container_site_uv">
+      访客数 <span id="busuanzi_value_site_uv"></span>
+    </span>
   {% endif %}
 
   <div class="footer-btn theme-toggler hide">
@@ -19,7 +22,7 @@
 
 <script
   async
-  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+  src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
 
 
