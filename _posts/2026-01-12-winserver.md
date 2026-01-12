@@ -1,6 +1,6 @@
 ---
-layout: winserver 版本转换
-title: "change 版本"
+layout: winserver 
+title: "winserver 版本转换"
 categories: [server]
 ---
 微软官方并不提供server系统的正式版本，只提供测试的评估版本，使用正版key前需要先转版本，那么我们怎么修改为正式版本呢？
