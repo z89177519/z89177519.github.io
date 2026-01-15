@@ -10,7 +10,7 @@ categories: [server]
 cmd命令页面输入：winver 会弹出版本页面 查看具体为数据中心版还是标准版（知道版本请直接忽略此步骤）
 # 2. 转换版本
 ## 2.1 标准版输入命令：
-'DISM /online /Set-Edition:ServerStandard /ProductKey:XXXXX-XXXXX-XXXXX-XXXXX-XXXXX /AcceptEula'
+`DISM /online /Set-Edition:ServerStandard /ProductKey:XXXXX-XXXXX-XXXXX-XXXXX-XXXXX /AcceptEula`
 ## 2.2 或者
 DISM /online /Set-Edition:ServerStandard /ProductKey:XXXXX-XXXXX-XXXXX-XXXXX-XXXXX /AcceptEula /LimitAccess 
 避免从windows update获取数据
@@ -42,3 +42,5 @@ XXXX为此版本的激活密钥
 2025标准：TVRH6-WHNXV-R9WG3-9XRFY-MY832
 
 2025数据：D764K-2NDRG-47T6Q-P8T8W-YP6DF
+
+''
