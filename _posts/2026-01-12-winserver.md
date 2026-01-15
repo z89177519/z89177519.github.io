@@ -9,16 +9,16 @@ categories: [server]
 ## 开始————运行————CMD(管理员模式)
 cmd命令页面输入：winver 会弹出版本页面 查看具体为数据中心版还是标准版（知道版本请直接忽略此步骤）
 # 2. 转换版本
-## 标准版输入命令：
+## 2.1 标准版输入命令：
 DISM /online /Set-Edition:ServerStandard /ProductKey:XXXXX-XXXXX-XXXXX-XXXXX-XXXXX /AcceptEula
-## 2.1 或者
+## 2.2 或者
 DISM /online /Set-Edition:ServerStandard /ProductKey:XXXXX-XXXXX-XXXXX-XXXXX-XXXXX /AcceptEula /LimitAccess 
 避免从windows update获取数据
-## 数据中心版输入命令：
+## 2.3 数据中心版输入命令：
 DISM /online /Set-Edition:ServerDatacenter /ProductKey:XXXXX-XXXXX-XXXXX-XXXXX-XXXXX /AcceptEula
 XXXX为此版本的激活密钥
 命令成功会提示开始升级组件，并有10%-100%进度条显示
-## 2.2 按Y重启操作系统升级成功
+## 2.4  按Y重启操作系统升级成功
    
 # 3 .激活码：（此处的激活码只限安装，不能激活）
 
