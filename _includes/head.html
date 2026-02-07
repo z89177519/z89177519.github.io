@@ -23,6 +23,7 @@
     如果没有提供专用的 apple touch 图标 (logo.png)，使用 favicon.ico 作为回退
   {%- endcomment -%}
   <link rel="apple-touch-icon" href="{{site.baseurl}}/static/img/favicon.ico" />
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ site.url | append: site.baseurl }}/static/xml/rss.xml" />
   <link rel="stylesheet" href="{{site.baseurl}}/static/css/common.css?t={{buildAt}}" />
   <link rel="stylesheet" href="{{site.baseurl}}/static/css/theme-dark.css?t={{buildAt}}" />
   {%- if page.layout == "mypost" %}
