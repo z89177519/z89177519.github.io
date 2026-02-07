@@ -1,14 +1,11 @@
 // 打印主题标识,请保留出处
-;(function () {
-  var style1 = 'background:#4BB596;color:#ffffff;border-radius: 2px;'
-  var style2 = 'color:auto;'
-  var author = ' TMaize'
-  var github = ' https://github.com/TMaize/tmaize-blog'
-  var build = ' ' + blog.buildAt.substr(0, 4)
-  build += '/' + blog.buildAt.substr(4, 2)
-  build += '/' + blog.buildAt.substr(6, 2)
-  build += ' ' + blog.buildAt.substr(8, 2)
-  build += ':' + blog.buildAt.substr(10, 2)
+(function () {
+  const style1 = 'background:#4BB596;color:#ffffff;border-radius: 2px;'
+  const style2 = 'color:auto;'
+  const author = ' TMaize'
+  const github = ' https://github.com/TMaize/tmaize-blog'
+  const buildTime = blog.buildAt
+  const build = ` ${buildTime.substr(0, 4)}/${buildTime.substr(4, 2)}/${buildTime.substr(6, 2)} ${buildTime.substr(8, 2)}:${buildTime.substr(10, 2)}`
   console.info('%c Author %c' + author, style1, style2)
   console.info('%c Build  %c' + build, style1, style2)
   console.info('%c GitHub %c' + github, style1, style2)
@@ -18,12 +15,12 @@
  * 工具，允许多次onload不被覆盖
  * @param {方法} func
  */
-blog.addLoadEvent = function (func) {
-  var oldonload = window.onload
-  if (typeof window.onload != 'function') {
+blog.addLoadEvent = (func) => {
+  const oldonload = window.onload
+  if (typeof window.onload !== 'function') {
     window.onload = func
   } else {
-    window.onload = function () {
+    window.onload = () => {
       oldonload()
       func()
     }
@@ -31,22 +28,14 @@ blog.addLoadEvent = function (func) {
 }
 
 /**
- * 工具，兼容的方式添加事件
+ * 工具，添加事件监听
  * @param {单个DOM节点} dom
  * @param {事件名} eventName
  * @param {事件方法} func
  * @param {是否捕获} useCapture
  */
-blog.addEvent = function (dom, eventName, func, useCapture) {
-  if (window.attachEvent) {
-    dom.attachEvent('on' + eventName, func)
-  } else if (window.addEventListener) {
-    if (useCapture != undefined && useCapture === true) {
-      dom.addEventListener(eventName, func, true)
-    } else {
-      dom.addEventListener(eventName, func, false)
-    }
-  }
+blog.addEvent = (dom, eventName, func, useCapture = false) => {
+  dom.addEventListener(eventName, func, useCapture)
 }
 
 /**
@@ -54,322 +43,229 @@ blog.addEvent = function (dom, eventName, func, useCapture) {
  * @param {单个DOM节点} dom
  * @param {class名} className
  */
-blog.addClass = function (dom, className) {
-  if (!blog.hasClass(dom, className)) {
-    var c = dom.className || ''
-    dom.className = c + ' ' + className
-    dom.className = blog.trim(dom.className)
-  }
-}
+blog.addClass = (dom, className) => dom.classList.add(className)
 
 /**
  * 工具，DOM是否有某个class
  * @param {单个DOM节点} dom
  * @param {class名} className
  */
-blog.hasClass = function (dom, className) {
-  var list = (dom.className || '').split(/\s+/)
-  for (var i = 0; i < list.length; i++) {
-    if (list[i] == className) return true
-  }
-  return false
-}
+blog.hasClass = (dom, className) => dom.classList.contains(className)
 
 /**
  * 工具，DOM删除某个class
  * @param {单个DOM节点} dom
  * @param {class名} className
  */
-blog.removeClass = function (dom, className) {
-  if (blog.hasClass(dom, className)) {
-    var list = (dom.className || '').split(/\s+/)
-    var newName = ''
-    for (var i = 0; i < list.length; i++) {
-      if (list[i] != className) newName = newName + ' ' + list[i]
-    }
-    dom.className = blog.trim(newName)
-  }
+blog.removeClass = (dom, className) => dom.classList.remove(className)
+
+/**
+ * 工具，转义html字符防止XSS
+ * @param {字符串} str
+ */
+blog.encodeHtml = (str) => {
+  const div = document.createElement('div')
+  div.innerText = str
+  return div.innerHTML
 }
 
 /**
- * 工具，兼容问题，某些OPPO手机不支持ES5的trim方法
+ * 工具，转义正则关键字
  * @param {字符串} str
  */
-blog.trim = function (str) {
-  return str.replace(/^\s+|\s+$/g, '')
-}
+blog.encodeRegChar = (str) => str.replace(/[\\.^$*+?{}\[\]|()]/g, '\\$&')
 
 /**
- * 工具，转义html字符
- * @param {字符串} str
+ * 工具，Fetch API
+ * @param {Object} option
+ * @param {Function} success
+ * @param {Function} fail
  */
-blog.htmlEscape = function (str) {
-  var temp = document.createElement('div')
-  temp.innerText = str
-  str = temp.innerHTML
-  temp = null
-  return str
-}
-
-/**
- * 工具，转换实体字符防止XSS
- * @param {字符串} str
- */
-blog.encodeHtml = function (html) {
-  var o = document.createElement('div')
-  o.innerText = html
-  var temp = o.innerHTML
-  o = null
-  return temp
-}
-
-/**
- * 工具， 转义正则关键字
- * @param {字符串} str
- */
-blog.encodeRegChar = function (str) {
-  // \ 必须在第一位
-  var arr = ['\\', '.', '^', '$', '*', '+', '?', '{', '}', '[', ']', '|', '(', ')']
-  arr.forEach(function (c) {
-    var r = new RegExp('\\' + c, 'g')
-    str = str.replace(r, '\\' + c)
-  })
-  return str
-}
-
-/**
- * 工具，Ajax
- * @param {字符串} str
- */
-blog.ajax = function (option, success, fail) {
-  var xmlHttp = null
-  if (window.XMLHttpRequest) {
-    xmlHttp = new XMLHttpRequest()
-  } else {
-    xmlHttp = new ActiveXObject('Microsoft.XMLHTTP')
-  }
-  var url = option.url
-  var method = (option.method || 'GET').toUpperCase()
-  var sync = option.sync === false ? false : true
-  var timeout = option.timeout || 10000
-
-  var timer
-  var isTimeout = false
-  xmlHttp.open(method, url, sync)
-  xmlHttp.onreadystatechange = function () {
-    if (isTimeout) {
-      fail({
-        error: '请求超时'
-      })
-    } else {
-      if (xmlHttp.readyState == 4) {
-        if (xmlHttp.status == 200) {
-          success(xmlHttp.responseText)
-        } else {
-          fail({
-            error: '状态错误',
-            code: xmlHttp.status
-          })
-        }
-        //清除未执行的定时函数
-        clearTimeout(timer)
-      }
-    }
-  }
-  timer = setTimeout(function () {
-    isTimeout = true
-    fail({
-      error: '请求超时'
+blog.ajax = async (option, success, fail) => {
+  const { url, method = 'GET', timeout = 10000 } = option
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
+  
+  try {
+    const response = await fetch(url, {
+      method: method.toUpperCase(),
+      signal: controller.signal
     })
-    xmlHttp.abort()
-  }, timeout)
-  xmlHttp.send()
+    clearTimeout(timeoutId)
+    
+    if (response.ok) {
+      const data = await response.text()
+      success?.(data)
+    } else {
+      fail?.({ error: '状态错误', code: response.status })
+    }
+  } catch (error) {
+    clearTimeout(timeoutId)
+    fail?.({ error: error.name === 'AbortError' ? '请求超时' : error.message })
+  }
 }
 
 /**
  * 特效：点击页面文字冒出特效
  */
-blog.initClickEffect = function (textArr) {
-  function createDOM(text) {
-    var dom = document.createElement('span')
+blog.initClickEffect = (textArr) => {
+  const createDOM = (text) => {
+    const dom = document.createElement('span')
     dom.innerText = text
-    dom.style.left = 0
-    dom.style.top = 0
-    dom.style.position = 'fixed'
-    dom.style.fontSize = '12px'
-    dom.style.whiteSpace = 'nowrap'
-    dom.style.webkitUserSelect = 'none'
-    dom.style.userSelect = 'none'
-    dom.style.opacity = 0
-    dom.style.transform = 'translateY(0)'
-    dom.style.webkitTransform = 'translateY(0)'
+    Object.assign(dom.style, {
+      left: '0',
+      top: '0',
+      position: 'fixed',
+      fontSize: '12px',
+      whiteSpace: 'nowrap',
+      webkitUserSelect: 'none',
+      userSelect: 'none',
+      opacity: '0',
+      transform: 'translateY(0)',
+      webkitTransform: 'translateY(0)'
+    })
     return dom
   }
 
-  blog.addEvent(window, 'click', function (ev) {
+  blog.addEvent(window, 'click', (ev) => {
     let target = ev.target
     while (target !== document.documentElement) {
-      if (target.tagName.toLocaleLowerCase() == 'a') return
+      if (target.tagName.toLowerCase() === 'a') return
       if (blog.hasClass(target, 'footer-btn')) return
       target = target.parentNode
     }
 
-    var text = textArr[parseInt(Math.random() * textArr.length)]
-    var dom = createDOM(text)
-
+    const text = textArr[Math.floor(Math.random() * textArr.length)]
+    const dom = createDOM(text)
     document.body.appendChild(dom)
-    var w = parseInt(window.getComputedStyle(dom, null).getPropertyValue('width'))
-    var h = parseInt(window.getComputedStyle(dom, null).getPropertyValue('height'))
+    
+    const w = parseInt(window.getComputedStyle(dom, null).width)
+    const h = parseInt(window.getComputedStyle(dom, null).height)
+    const sh = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+    
+    dom.style.left = `${ev.pageX - w / 2}px`
+    dom.style.top = `${ev.pageY - sh - h}px`
+    dom.style.opacity = '1'
 
-    var sh = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-    dom.style.left = ev.pageX - w / 2 + 'px'
-    dom.style.top = ev.pageY - sh - h + 'px'
-    dom.style.opacity = 1
-
-    setTimeout(function () {
+    setTimeout(() => {
       dom.style.transition = 'transform 500ms ease-out, opacity 500ms ease-out'
       dom.style.webkitTransition = 'transform 500ms ease-out, opacity 500ms ease-out'
-      dom.style.opacity = 0
+      dom.style.opacity = '0'
       dom.style.transform = 'translateY(-26px)'
       dom.style.webkitTransform = 'translateY(-26px)'
     }, 20)
 
-    setTimeout(function () {
+    setTimeout(() => {
       document.body.removeChild(dom)
-      dom = null
     }, 520)
   })
 }
 
 // 新建DIV包裹TABLE
-blog.addLoadEvent(function () {
-  // 文章页生效
-  if (document.getElementsByClassName('page-post').length == 0) {
-    return
-  }
-  var tables = document.getElementsByTagName('table')
-  for (var i = 0; i < tables.length; i++) {
-    var table = tables[i]
-    var elem = document.createElement('div')
-    elem.setAttribute('class', 'table-container')
-    table.parentNode.insertBefore(elem, table)
+blog.addLoadEvent(() => {
+  if (!document.querySelector('.page-post')) return
+  
+  const tables = document.querySelectorAll('table')
+  tables.forEach(table => {
+    const elem = document.createElement('div')
+    elem.className = 'table-container'
+    table.parentNode?.insertBefore(elem, table)
     elem.appendChild(table)
-  }
+  })
 })
 
 // 回到顶部
-blog.addLoadEvent(function () {
-  var el = document.querySelector('.footer-btn.to-top')
+blog.addLoadEvent(() => {
+  const el = document.querySelector('.footer-btn.to-top')
   if (!el) return
-  function getScrollTop() {
-    if (document.documentElement && document.documentElement.scrollTop) {
-      return document.documentElement.scrollTop
-    } else if (document.body) {
-      return document.body.scrollTop
-    }
+  
+  const getScrollTop = () => document.documentElement.scrollTop || document.body.scrollTop
+  
+  const checkToShow = () => {
+    getScrollTop() > 200 ? blog.addClass(el, 'show') : blog.removeClass(el, 'show')
   }
-  function ckeckToShow() {
-    if (getScrollTop() > 200) {
-      blog.addClass(el, 'show')
-    } else {
-      blog.removeClass(el, 'show')
-    }
-  }
-  blog.addEvent(window, 'scroll', ckeckToShow)
-  blog.addEvent(
-    el,
-    'click',
-    function (event) {
-      window.scrollTo(0, 0)
-      event.stopPropagation()
-    },
-    true
-  )
-  ckeckToShow()
+  
+  blog.addEvent(window, 'scroll', checkToShow)
+  blog.addEvent(el, 'click', (event) => {
+    window.scrollTo(0, 0)
+    event.stopPropagation()
+  }, true)
+  
+  checkToShow()
 })
 
 // 点击图片全屏预览
-blog.addLoadEvent(function () {
-  if (!document.querySelector('.page-post')) {
-    return
-  }
+blog.addLoadEvent(() => {
+  const postEl = document.querySelector('.page-post')
+  if (!postEl) return
+  
   console.debug('init post img click event')
+  
   let imgMoveOrigin = null
   let restoreLock = false
-  let imgArr = document.querySelectorAll('.page-post img')
+  const imgArr = document.querySelectorAll('.page-post img')
 
-  let css = [
-    '.img-move-bg {',
-    '  transition: opacity 300ms ease;',
-    '  position: fixed;',
-    '  left: 0;',
-    '  top: 0;',
-    '  right: 0;',
-    '  bottom: 0;',
-    '  opacity: 0;',
-    '  background-color: #000000;',
-    '  z-index: 100;',
-    '}',
-    '.img-move-item {',
-    '  transition: all 300ms ease;',
-    '  position: fixed;',
-    '  opacity: 0;',
-    '  cursor: pointer;',
-    '  z-index: 101;',
-    '}'
-  ].join('')
-  var styleDOM = document.createElement('style')
-  if (styleDOM.styleSheet) {
-    styleDOM.styleSheet.cssText = css
-  } else {
-    styleDOM.appendChild(document.createTextNode(css))
-  }
-  document.querySelector('head').appendChild(styleDOM)
+  const css = `
+    .img-move-bg {
+      transition: opacity 300ms ease;
+      position: fixed;
+      left: 0; top: 0; right: 0; bottom: 0;
+      opacity: 0;
+      background-color: #000000;
+      z-index: 100;
+    }
+    .img-move-item {
+      transition: all 300ms ease;
+      position: fixed;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 101;
+    }
+  `
+  
+  const styleDOM = document.createElement('style')
+  styleDOM.textContent = css
+  document.head.appendChild(styleDOM)
 
   window.addEventListener('resize', toCenter)
 
-  for (let i = 0; i < imgArr.length; i++) {
-    imgArr[i].addEventListener('click', imgClickEvent, true)
-  }
+  imgArr.forEach(img => img.addEventListener('click', imgClickEvent, true))
 
-  function prevent(ev) {
-    ev.preventDefault()
-  }
+  const prevent = (ev) => ev.preventDefault()
 
   function toCenter() {
-    if (!imgMoveOrigin) {
-      return
-    }
-    let width = Math.min(imgMoveOrigin.naturalWidth, parseInt(document.documentElement.clientWidth * 0.9))
-    let height = (width * imgMoveOrigin.naturalHeight) / imgMoveOrigin.naturalWidth
+    if (!imgMoveOrigin) return
+    
+    let width = Math.min(imgMoveOrigin.naturalWidth, window.innerWidth * 0.9)
+    let height = width * imgMoveOrigin.naturalHeight / imgMoveOrigin.naturalWidth
+    
     if (window.innerHeight * 0.95 < height) {
-      height = Math.min(imgMoveOrigin.naturalHeight, parseInt(window.innerHeight * 0.95))
-      width = (height * imgMoveOrigin.naturalWidth) / imgMoveOrigin.naturalHeight
+      height = Math.min(imgMoveOrigin.naturalHeight, window.innerHeight * 0.95)
+      width = height * imgMoveOrigin.naturalWidth / imgMoveOrigin.naturalHeight
     }
 
-    let img = document.querySelector('.img-move-item')
-    img.style.left = (document.documentElement.clientWidth - width) / 2 + 'px'
-    img.style.top = (window.innerHeight - height) / 2 + 'px'
-    img.style.width = width + 'px'
-    img.style.height = height + 'px'
+    const img = document.querySelector('.img-move-item')
+    img.style.left = `${(window.innerWidth - width) / 2}px`
+    img.style.top = `${(window.innerHeight - height) / 2}px`
+    img.style.width = `${width}px`
+    img.style.height = `${height}px`
   }
 
   function restore() {
-    if (restoreLock == true) {
-      return
-    }
+    if (restoreLock) return
     restoreLock = true
-    let div = document.querySelector('.img-move-bg')
-    let img = document.querySelector('.img-move-item')
+    
+    const div = document.querySelector('.img-move-bg')
+    const img = document.querySelector('.img-move-item')
 
-    div.style.opacity = 0
-    img.style.opacity = 0
-    img.style.left = imgMoveOrigin.x + 'px'
-    img.style.top = imgMoveOrigin.y + 'px'
-    img.style.width = imgMoveOrigin.width + 'px'
-    img.style.height = imgMoveOrigin.height + 'px'
+    div.style.opacity = '0'
+    img.style.opacity = '0'
+    img.style.left = `${imgMoveOrigin.x}px`
+    img.style.top = `${imgMoveOrigin.y}px`
+    img.style.width = `${imgMoveOrigin.width}px`
+    img.style.height = `${imgMoveOrigin.height}px`
 
-    setTimeout(function () {
+    setTimeout(() => {
       restoreLock = false
       document.body.removeChild(div)
       document.body.removeChild(img)
@@ -379,111 +275,102 @@ blog.addLoadEvent(function () {
 
   function imgClickEvent(event) {
     imgMoveOrigin = event.target
+    const { x, y, width, height, src } = imgMoveOrigin
 
-    let div = document.createElement('div')
+    const div = document.createElement('div')
     div.className = 'img-move-bg'
 
-    let img = document.createElement('img')
+    const img = document.createElement('img')
     img.className = 'img-move-item'
-    img.src = imgMoveOrigin.src
-    img.style.left = imgMoveOrigin.x + 'px'
-    img.style.top = imgMoveOrigin.y + 'px'
-    img.style.width = imgMoveOrigin.width + 'px'
-    img.style.height = imgMoveOrigin.height + 'px'
+    img.src = src
+    img.style.left = `${x}px`
+    img.style.top = `${y}px`
+    img.style.width = `${width}px`
+    img.style.height = `${height}px`
 
-    div.onclick = restore
-    div.onmousewheel = restore
-    div.ontouchmove = prevent
-
-    img.onclick = restore
-    img.onmousewheel = restore
-    img.ontouchmove = prevent
+    [div, img].forEach(el => {
+      el.onclick = restore
+      el.onmousewheel = restore
+      el.ontouchmove = prevent
+    })
     img.ondragstart = prevent
 
     document.body.appendChild(div)
     document.body.appendChild(img)
 
-    setTimeout(function () {
-      div.style.opacity = 0.5
-      img.style.opacity = 1
+    requestAnimationFrame(() => {
+      div.style.opacity = '0.5'
+      img.style.opacity = '1'
       toCenter()
-    }, 0)
+    })
   }
 })
 
 // 切换夜间模式
-blog.addLoadEvent(function () {
-  const $el = document.querySelector('.footer-btn.theme-toggler')
-  const $icon = $el.querySelector('.svg-icon')
+blog.addLoadEvent(() => {
+  const themeBtn = document.querySelector('.footer-btn.theme-toggler')
+  const themeIcon = themeBtn.querySelector('.svg-icon')
 
-  blog.removeClass($el, 'hide')
+  blog.removeClass(themeBtn, 'hide')
   if (blog.darkMode) {
-    blog.removeClass($icon, 'icon-theme-light')
-    blog.addClass($icon, 'icon-theme-dark')
+    blog.removeClass(themeIcon, 'icon-theme-light')
+    blog.addClass(themeIcon, 'icon-theme-dark')
   }
 
-  function initDarkMode(flag) {
-    blog.removeClass($icon, 'icon-theme-light')
-    blog.removeClass($icon, 'icon-theme-dark')
-    if (flag === 'true') blog.addClass($icon, 'icon-theme-dark')
-    else blog.addClass($icon, 'icon-theme-light')
-
+  const updateThemeIcon = (isDark) => {
+    blog.removeClass(themeIcon, 'icon-theme-light')
+    blog.removeClass(themeIcon, 'icon-theme-dark')
+    blog.addClass(themeIcon, isDark ? 'icon-theme-dark' : 'icon-theme-light')
+    
     document.documentElement.setAttribute('transition', '')
-    setTimeout(function () {
-      document.documentElement.removeAttribute('transition')
-    }, 600)
-
-    blog.initDarkMode(flag)
+    setTimeout(() => document.documentElement.removeAttribute('transition'), 600)
+    blog.initDarkMode(isDark ? 'true' : 'false')
   }
 
-  blog.addEvent($el, 'click', function () {
+  blog.addEvent(themeBtn, 'click', () => {
     const flag = blog.darkMode ? 'false' : 'true'
     localStorage.darkMode = flag
-    initDarkMode(flag)
+    updateThemeIcon(flag === 'true')
   })
 
-  if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (ev) {
-      const systemDark = ev.target.matches
-      if (systemDark !== blog.darkMode) {
-        localStorage.darkMode = '' // 清除用户设置
-        initDarkMode(systemDark ? 'true' : 'false')
-      }
-    })
-  }
+  // 检测系统主题明暗丢改变
+  window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener?.('change', (ev) => {
+    const systemDark = ev.matches
+    if (systemDark !== blog.darkMode) {
+      localStorage.removeItem('darkMode')
+      updateThemeIcon(systemDark)
+    }
+  })
 })
 
 // 标题定位
-blog.addLoadEvent(function () {
-  if (!document.querySelector('.page-post')) {
-    return
-  }
-  const list = document.querySelectorAll('.post h1, .post h2')
-  for (var i = 0; i < list.length; i++) {
-    blog.addEvent(list[i], 'click', function (event) {
-      const el = event.target
-      if (el.scrollIntoView) {
-        el.scrollIntoView({ block: 'start' })
-      }
+blog.addLoadEvent(() => {
+  const postEl = document.querySelector('.page-post')
+  if (!postEl) return
+  
+  const headings = document.querySelectorAll('.post h1, .post h2')
+  headings.forEach(el => {
+    blog.addEvent(el, 'click', () => {
+      el.scrollIntoView?.({ block: 'start' })
       if (el.id && history.replaceState) {
-        history.replaceState({}, '', '#' + el.id)
+        history.replaceState({}, '', `#${el.id}`)
       }
     })
-  }
+  })
 })
 
-// 为页面图片启用原生懒加载（除 logo 之类的关键图片）
-blog.addLoadEvent(function () {
+// 为页面图片启用缘加载
+// (下native lazy loading 支持)
+blog.addLoadEvent(() => {
   try {
-    var imgs = document.querySelectorAll('img')
-    for (var i = 0; i < imgs.length; i++) {
-      var img = imgs[i]
+    const imgs = document.querySelectorAll('img')
+    imgs.forEach(img => {
       if (!img.hasAttribute('loading')) {
-        // 如果图片在 header .logo 中，跳过（通常为站点 logo）
-        if (img.closest && img.closest('.header') && img.closest('.logo')) continue
+        // 跳过 logo 预载
+        if (img.closest?.('.header')?.querySelector?.('.logo')?.contains(img)) return
         img.setAttribute('loading', 'lazy')
       }
-    }
+    })
   } catch (e) {
     console.warn('init lazy loading images failed', e)
   }
