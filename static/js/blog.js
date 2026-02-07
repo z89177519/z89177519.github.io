@@ -471,3 +471,20 @@ blog.addLoadEvent(function () {
     })
   }
 })
+
+// 为页面图片启用原生懒加载（除 logo 之类的关键图片）
+blog.addLoadEvent(function () {
+  try {
+    var imgs = document.querySelectorAll('img')
+    for (var i = 0; i < imgs.length; i++) {
+      var img = imgs[i]
+      if (!img.hasAttribute('loading')) {
+        // 如果图片在 header .logo 中，跳过（通常为站点 logo）
+        if (img.closest && img.closest('.header') && img.closest('.logo')) continue
+        img.setAttribute('loading', 'lazy')
+      }
+    }
+  } catch (e) {
+    console.warn('init lazy loading images failed', e)
+  }
+})
