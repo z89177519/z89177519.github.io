@@ -37,14 +37,14 @@
       baseurl: '{{site.baseurl}}',
       buildAt: '{{buildAt}}',
       darkMode: false,
-      initDarkMode: function (flag) {
-        if (flag && flag === 'true') this.darkMode = true
-        else if (flag && flag === 'false') this.darkMode = false
-        else this.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-        document.documentElement.className = this.darkMode ? 'dark' : ''
-        document.querySelector('meta[name=theme-color]').setAttribute('content', this.darkMode ? '#2D2E32' : '#FFFFFF')
+      initDarkMode: (flag) => {
+        if (flag === 'true') blog.darkMode = true
+        else if (flag === 'false') blog.darkMode = false
+        else blog.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+        document.documentElement.className = blog.darkMode ? 'dark' : ''
+        document.querySelector('meta[name=theme-color]').setAttribute('content', blog.darkMode ? '#2D2E32' : '#FFFFFF')
       }
     }
-    blog.initDarkMode(localStorage.darkMode)
+    blog.initDarkMode(localStorage.getItem('darkMode'))
   </script>
 </head>
