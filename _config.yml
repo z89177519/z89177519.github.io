@@ -19,8 +19,9 @@ kramdown:
 exclude: ['CNAME', 'README.md', 'LICENSE', '_site', 'dist', 'Gemfile', 'Gemfile.lock', 'blog.sh']
 
 # 域名配置
+# 网站完整URL（用于RSS、sitemap等）
+url: 'https://z89177519.github.io'
 # baseurl配置,如果网站部署在根目录下的其他目录中，请设置为 /目录名
-# domainUrl: 'https://z89177519.github.io/tucao.html'
 baseurl: ''
 
 # 吐个槽地址，会在chat页面中重定向到该地址
