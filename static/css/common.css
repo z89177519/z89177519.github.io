@@ -26,6 +26,11 @@ html {
   --color-border-dark: #3B434B;
   --color-shadow-dark: rgba(0, 0, 0, 0.3);
   
+  /* 代码块和表单 */
+  --color-code-bg: #f5f5f5;
+  --color-code: #d63384;
+  --color-input-bg: white;
+  
   /* 间距系统 */
   --space-xs: 4px;
   --space-sm: 8px;
