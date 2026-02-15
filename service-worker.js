@@ -10,31 +10,40 @@ let baseUrl = '{{site.baseurl}}'
 let cachePrefix = 'blog_'
 let cacheKey = cachePrefix + version
 
-// 不设置skipWaiting，更新后进入wating状态，依旧是旧的service-worker生效，直到旧的不控制任何 client，比如关闭浏览器，此时再打开页面才会生效
-// 设置skipWaiting后，立即成效，这时候会出现一个页面由sw-v1控制，后面又变成sw-v2控制，自己的程序要处理好使用不同sw版本的情况
+// 不设置skipWaiting，更新后进入waiting状态，仍旧是旧的service-worker生效，直到旧的不控制任何client，比如关闭浏览器，此时再打开页面才会生效
+// 设置skipWaiting后，立即生效，这时候会出现一个页面由sw-v1控制，后面又变成sw-v2控制，自己的程序要处理好使用不同sw版本的情况
 self.skipWaiting()
 
 self.addEventListener('install', function (event) {
   console.log('serviceWorker install')
   event.waitUntil(
-    fetch(baseUrl + '/index.html')
-      .then(resp => resp.text())
-      .then(html => {
-        let reg = /(href|src)=\"(.+?)\"/g // 匹配链接
-        let reg2 = /#.*/ // 去除hash
-        let urls = []
+    (async () => {
+      try {
+        const response = await fetch(baseUrl + '/index.html')
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        
+        const html = await response.text()
+        const urls = new Set()
+        
+        // 匹配 href 和 src 属性
+        const regex = /(href|src)="([^"]+)"/g
         let match
-        while ((match = reg.exec(html)) !== null) {
-          urls.push(match[2])
+        
+        while ((match = regex.exec(html)) !== null) {
+          const url = match[2].replace(/#.*/, '') // 去除hash
+          
+          // 只缓存相对URL和同域名URL
+          if (!url.startsWith('http') || url.startsWith(baseUrl)) {
+            urls.add(url)
+          }
         }
-        urls = urls.map(url => url.replace(reg2, ''))
-        urls = urls.filter(url => !url.startsWith('http') && url.startsWith(baseUrl))
-        urls = Array.from(new Set(urls))
-
-        caches.open(cacheKey).then(function (cache) {
-          cache.addAll(urls)
-        })
-      })
+        
+        const cache = await caches.open(cacheKey)
+        await cache.addAll(Array.from(urls))
+      } catch (error) {
+        console.error('Service Worker install failed:', error)
+      }
+    })()
   )
 })
 
@@ -42,24 +51,54 @@ self.addEventListener('install', function (event) {
 self.addEventListener('activate', function (event) {
   console.log('serviceWorker activate')
 
-  caches.keys().then(keys => {
-    keys.forEach(key => {
-      if (key.startsWith(cachePrefix) && key != cacheKey) caches.delete(key)
-    })
-  })
+  event.waitUntil(
+    (async () => {
+      try {
+        const keys = await caches.keys()
+        await Promise.all(
+          keys
+            .filter(key => key.startsWith(cachePrefix) && key !== cacheKey)
+            .map(key => caches.delete(key))
+        )
+      } catch (error) {
+        console.error('Service Worker activate failed:', error)
+      }
+    })()
+  )
 })
 
-this.addEventListener('fetch', function (event) {
-  if (new URL(event.request.url).origin != self.origin) {
+self.addEventListener('fetch', function (event) {
+  const url = new URL(event.request.url)
+  
+  // 只处理同源请求
+  if (url.origin !== self.origin) {
     return
   }
+  
   event.respondWith(
-    caches
-      .open(cacheKey)
-      .then(cache => cache.match(event.request))
-      .then(data => {
-        if (data) return data
-        return fetch(event.request)
-      })
+    (async () => {
+      try {
+        const cache = await caches.open(cacheKey)
+        const cached = await cache.match(event.request)
+        
+        if (cached) {
+          return cached
+        }
+        
+        const response = await fetch(event.request)
+        
+        // 缓存成功的响应
+        if (response.ok) {
+          const clonedResponse = response.clone()
+          cache.put(event.request, clonedResponse)
+        }
+        
+        return response
+      } catch (error) {
+        console.error('Fetch failed:', error)
+        // 返回缓存版本或离线页面
+        return caches.match(event.request)
+      }
+    })()
   )
 })
