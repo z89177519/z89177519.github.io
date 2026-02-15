@@ -85,7 +85,7 @@ html.dark {
   --color-input-bg: #0D1117;
 }
 body {
-  max-width: 680px;
+  max-width: 900px;
   padding: var(--space-md);
   margin: 0 auto;
   background: var(--color-bg);
