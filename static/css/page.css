@@ -13,31 +13,51 @@
   padding: 8px 0;
 }
 .list-post li .date {
-  color: #666666;
-  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
   flex-shrink: 0;
-  margin-right: 10px;
+  margin-right: var(--space-md);
+  font-weight: 500;
 }
 .list-post li .title {
   width: 0;
   flex-grow: 1;
-  padding: 4px 0;
+  padding: var(--space-sm) 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .list-post li .title a {
   font-size: 15px;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: all var(--transition-normal);
+  border-bottom: 2px solid transparent;
+}
+.list-post li .title a:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
 }
 .list-post li .categories {
   flex-shrink: 0;
-  padding: 3px 0;
-  margin-left: 10px;
+  padding: var(--space-xs) 0;
+  margin-left: var(--space-md);
+  display: flex;
+  gap: var(--space-sm);
 }
 .list-post li .categories a {
   font-size: 12px;
-  color: #666666;
-  margin-left: 8px;
+  color: var(--color-text-secondary);
+  background-color: var(--color-shadow);
+  padding: 2px var(--space-sm);
+  border-radius: 12px;
+  transition: all var(--transition-normal);
+  border: 1px solid transparent;
+}
+.list-post li .categories a:hover {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary-dark);
 }
 .list-category h2 {
   font-size: 15px;
@@ -48,30 +68,63 @@
   padding: 8px 0 8px 10px;
 }
 .list-category div a {
-  margin: 4px 6px;
+  margin: var(--space-sm) var(--space-md);
   white-space: nowrap;
   font-size: 15px;
   display: inline-block;
-  border-bottom: 1px solid #333333;
+  color: var(--color-text);
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+.list-category div a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  transition: width var(--transition-normal);
+}
+.list-category div a:hover::after {
+  width: 100%;
+}
+.list-category div a:hover {
+  color: var(--color-primary);
 }
 .page-search #search-input {
   text-align: center;
-  font-size: 14px;
-  border: 1px solid #eaeaea;
+  font-size: 15px;
+  border: 2px solid var(--color-border);
   width: 100%;
-  padding: 10px 0;
-  background-color: transparent;
+  padding: var(--space-md);
+  background-color: var(--color-input-bg);
+  color: var(--color-text);
+  border-radius: 4px;
+  transition: all var(--transition-normal);
+}
+.page-search #search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(75, 181, 150, 0.1);
+}
+.page-search #search-input::placeholder {
+  color: var(--color-text-tertiary);
 }
 .page-search h1 {
-  font-size: 16px;
+  font-size: 18px;
   height: 46px;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+  font-weight: 700;
+  color: var(--color-text);
 }
 .page-search h1 i {
   font-size: 20px;
-  margin-left: 6px;
+  margin-left: var(--space-md);
+  color: var(--color-primary);
 }
 .page-search .list-search li {
   list-style: disc;
@@ -80,27 +133,38 @@
 }
 .page-search .list-search a {
   display: block;
-  border-bottom: 1px dashed #ccc;
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-md) 0;
+  transition: all var(--transition-normal);
+}
+.page-search .list-search a:hover {
+  background-color: var(--color-shadow);
+  padding-left: var(--space-md);
 }
 .page-search .list-search .title {
   display: inline-block;
   word-break: break-all;
-  font-size: 14px;
-  font-weight: bold;
-  padding-bottom: 1px;
-  border-bottom: 1px solid #999;
+  font-size: 15px;
+  font-weight: 700;
+  padding-bottom: 2px;
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
 }
 .page-search .list-search .content {
   display: block;
   font-size: 14px;
-  color: #5a5a5a;
+  color: var(--color-text-secondary);
   word-break: break-all;
-  padding: 10px 0;
+  padding: var(--space-md) 0;
+  line-height: 1.6;
 }
 .page-search .list-search .hint {
   font-size: inherit;
-  font-weight: bold;
-  color: #ff7f7f;
+  font-weight: 700;
+  color: var(--color-primary);
+  background-color: rgba(255, 127, 127, 0.1);
+  padding: 2px 4px;
+  border-radius: 2px;
 }
 @media screen and (max-width: 560px) {
   .list-post > h2 {
