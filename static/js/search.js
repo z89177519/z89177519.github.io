@@ -13,6 +13,8 @@ const loadAllPostData = async (callback) => {
     localStorage.removeItem('db')
 
     const response = await fetch(`${blog.baseurl}/static/xml/search.xml?t=${blog.buildAt}`)
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    
     const data = await response.text()
     
     if (loadingEl) loadingEl.style.opacity = '0'
@@ -33,13 +35,15 @@ blog.addLoadEvent(async () => {
   let titles = []
   let contents = []
   let inputLock = false
+  let searchTimeout
 
-  const parseTitle = () => Array.from(document.querySelectorAll('.list-search .title'), el => el.innerHTML)
+  const parseTitle = () => 
+    Array.from(document.querySelectorAll('.list-search .title'), el => el.textContent)
 
   const parseContent = (data) => {
     const root = document.createElement('div')
     root.innerHTML = data
-    return Array.from(root.querySelectorAll('li'), el => el.innerHTML)
+    return Array.from(root.querySelectorAll('li'), el => el.textContent)
   }
 
   const highlightText = (text, keyword, start, end) => {
@@ -51,24 +55,28 @@ blog.addLoadEvent(async () => {
 
   const search = (key) => {
     key = key.trim()
+    
+    if (!key) {
+      document.querySelectorAll('.list-search li').forEach(dom_li => {
+        dom_li.hidden = true
+      })
+      return
+    }
+
+    // HTML encode
     key = key.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-
-    const doms = document.querySelectorAll('.list-search li')
     const keyLower = key.toLowerCase()
-
+    
+    const doms = document.querySelectorAll('.list-search li')
+    
     doms.forEach((dom_li, i) => {
       const title = titles[i]
       const content = contents[i]
       const dom_title = dom_li.querySelector('.title')
       const dom_content = dom_li.querySelector('.content')
 
-      dom_title.innerHTML = title
+      dom_title.textContent = title
       dom_content.innerHTML = ''
-
-      if (!key) {
-        dom_li.hidden = true
-        return
-      }
 
       let hide = true
       const idx1 = title.toLowerCase().indexOf(keyLower)
@@ -87,7 +95,7 @@ blog.addLoadEvent(async () => {
         const idx = newContent.toLowerCase().indexOf(keyLower)
         dom_content.innerHTML = highlightText(newContent, key, idx, idx + key.length) + '...'
       } else if (idx1 !== -1) {
-        dom_content.innerHTML = content.substring(0, 100) + '...'
+        dom_content.textContent = content.substring(0, 100) + '...'
       }
 
       dom_li.hidden = hide
@@ -105,15 +113,18 @@ blog.addLoadEvent(async () => {
 
   search(input.value)
 
-  blog.addEvent(input, 'input', (event) => {
-    if (!inputLock) search(event.target.value)
+  input.addEventListener('input', (event) => {
+    if (!inputLock) {
+      clearTimeout(searchTimeout)
+      searchTimeout = requestAnimationFrame(() => search(event.target.value))
+    }
   })
 
-  blog.addEvent(input, 'compositionstart', () => {
+  input.addEventListener('compositionstart', () => {
     inputLock = true
   })
 
-  blog.addEvent(input, 'compositionend', (event) => {
+  input.addEventListener('compositionend', (event) => {
     inputLock = false
     search(event.target.value)
   })
