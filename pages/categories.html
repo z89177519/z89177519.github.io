@@ -8,13 +8,15 @@ title: 文章分类
     <h2>所有分类</h2>
     <div>
       {%- for category in site.categories %}
-      <a href="javascript:document.getElementById('{{ category[0] }}').scrollIntoView()">{{ category[0] }}</a>
+      {%- assign category_id = category[0] | slugify | default: category[0] %}
+      <a href="#{{ category_id }}" class="category-link hover-underline">{{ category[0] }}</a>
       {%- endfor %}
     </div>
   </div>
   {%- for category in site.categories %}
+  {%- assign category_id = category[0] | slugify | default: category[0] %}
   <div class="list-post">
-    <h2 id="{{ category[0] }}">{{ category[0] }}</h2>
+    <h2 id="{{ category_id }}">{{ category[0] }}</h2>
     <ul>
       {%- for post in category[1] %}
       <li>
@@ -28,3 +30,19 @@ title: 文章分类
   </div>
   {%- endfor %}
 </div>
+
+<script>
+// 平滑滚动支持（兼容不支持 CSS scroll-behavior 的浏览器）
+document.querySelectorAll('.category-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    const href = link.getAttribute('href')
+    if (href.startsWith('#')) {
+      e.preventDefault()
+      const target = document.querySelector(href)
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+  })
+})
+</script>
