@@ -32,17 +32,31 @@ title: 文章分类
 </div>
 
 <script>
-// 平滑滚动支持（兼容不支持 CSS scroll-behavior 的浏览器）
-document.querySelectorAll('.category-link').forEach(link => {
-  link.addEventListener('click', (e) => {
-    const href = link.getAttribute('href')
-    if (href.startsWith('#')) {
-      e.preventDefault()
-      const target = document.querySelector(href)
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    }
-  })
-})
+// 平滑滚动支持 - 分类链接导航
+(function() {
+  function initCategoryLinks() {
+    document.querySelectorAll('.category-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href')
+        if (href && href.startsWith('#')) {
+          e.preventDefault()
+          const targetId = href.substring(1)  // 移除 #
+          const target = document.getElementById(targetId)
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            // 更新 URL hash（不触发 click）
+            window.history.replaceState(null, null, href)
+          }
+        }
+      })
+    })
+  }
+  
+  // 确保 DOM 加载完成后执行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCategoryLinks)
+  } else {
+    initCategoryLinks()
+  }
+})()
 </script>
