@@ -30,7 +30,8 @@
   <link rel="stylesheet" href="{{site.baseurl}}/static/css/post.css?t={{buildAt}}" />
   <link rel="stylesheet" href="{{site.baseurl}}/static/css/code-dark.css?t={{buildAt}}" />
   <link rel="stylesheet" href="{{site.baseurl}}/static/css/code-light.css?t={{buildAt}}" />
-  {%- endif %} {%- if page.layout == "page" %}
+  {%- endif %} 
+  {%- if page.layout == "page" %}
   <link rel="stylesheet" href="{{site.baseurl}}/static/css/page.css?t={{buildAt}}" />
   {%- endif %}
   <script>
@@ -39,13 +40,14 @@
       buildAt: '{{buildAt}}',
       darkMode: false,
       initDarkMode: (flag) => {
-        if (flag === 'true') blog.darkMode = true
-        else if (flag === 'false') blog.darkMode = false
-        else blog.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-        document.documentElement.className = blog.darkMode ? 'dark' : ''
-        document.querySelector('meta[name=theme-color]').setAttribute('content', blog.darkMode ? '#2D2E32' : '#FFFFFF')
+        const isDark = flag === 'true' ? true : flag === 'false' ? false : window.matchMedia('(prefers-color-scheme: dark)').matches
+        blog.darkMode = isDark
+        document.documentElement.className = isDark ? 'dark' : ''
+        const themeColor = isDark ? '#2D2E32' : '#FFFFFF'
+        document.querySelector('meta[name=theme-color]')?.setAttribute('content', themeColor)
       }
     }
     blog.initDarkMode(localStorage.getItem('darkMode'))
   </script>
+</head>
 </head>
