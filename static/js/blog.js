@@ -16,14 +16,10 @@
  * @param {方法} func
  */
 blog.addLoadEvent = (func) => {
-  const oldonload = window.onload
-  if (typeof window.onload !== 'function') {
-    window.onload = func
+  if (document.readyState !== 'loading') {
+    func()
   } else {
-    window.onload = () => {
-      oldonload()
-      func()
-    }
+    document.addEventListener('DOMContentLoaded', func, { once: true })
   }
 }
 
@@ -84,13 +80,25 @@ blog.encodeRegChar = (str) => str.replace(/[\\.^$*+?{}\[\]|()]/g, '\\$&')
 blog.ajax = async (option, success, fail) => {
   const { url, method = 'GET', timeout = 10000 } = option
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), timeout)
   
+  let timeoutId
   try {
-    const response = await fetch(url, {
-      method: method.toUpperCase(),
-      signal: controller.signal
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => {
+        controller.abort()
+        reject(new Error('请求超时'))
+      }, timeout)
     })
+    
+    const response = await Promise.race([
+      fetch(url, {
+        method: method.toUpperCase(),
+        signal: controller.signal,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      }),
+      timeoutPromise
+    ])
+    
     clearTimeout(timeoutId)
     
     if (response.ok) {
@@ -101,7 +109,11 @@ blog.ajax = async (option, success, fail) => {
     }
   } catch (error) {
     clearTimeout(timeoutId)
-    fail?.({ error: error.name === 'AbortError' ? '请求超时' : error.message })
+    if (error.name === 'AbortError') {
+      fail?.({ error: '请求超时' })
+    } else {
+      fail?.({ error: error.message })
+    }
   }
 }
 
@@ -109,21 +121,23 @@ blog.ajax = async (option, success, fail) => {
  * 特效：点击页面文字冒出特效
  */
 blog.initClickEffect = (textArr) => {
+  if (!textArr?.length) return
+  
+  const ANIMATION_DURATION = 500
+  const ANIMATION_DELAY = 20
   const createDOM = (text) => {
     const dom = document.createElement('span')
     dom.innerText = text
-    Object.assign(dom.style, {
-      left: '0',
-      top: '0',
-      position: 'fixed',
-      fontSize: '12px',
-      whiteSpace: 'nowrap',
-      webkitUserSelect: 'none',
-      userSelect: 'none',
-      opacity: '0',
-      transform: 'translateY(0)',
-      webkitTransform: 'translateY(0)'
-    })
+    dom.style.cssText = `
+      left: 0; top: 0;
+      position: fixed;
+      font-size: 12px;
+      white-space: nowrap;
+      user-select: none;
+      opacity: 0;
+      transform: translateY(0);
+      pointer-events: none;
+    `
     return dom
   }
 
@@ -139,25 +153,26 @@ blog.initClickEffect = (textArr) => {
     const dom = createDOM(text)
     document.body.appendChild(dom)
     
-    const w = parseInt(window.getComputedStyle(dom, null).width)
-    const h = parseInt(window.getComputedStyle(dom, null).height)
-    const sh = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+    const rect = dom.getBoundingClientRect()
+    const w = Math.round(rect.width)
+    const h = Math.round(rect.height)
+    const sh = window.scrollY || window.pageYOffset || 0
     
     dom.style.left = `${ev.pageX - w / 2}px`
     dom.style.top = `${ev.pageY - sh - h}px`
     dom.style.opacity = '1'
 
-    setTimeout(() => {
-      dom.style.transition = 'transform 500ms ease-out, opacity 500ms ease-out'
-      dom.style.webkitTransition = 'transform 500ms ease-out, opacity 500ms ease-out'
-      dom.style.opacity = '0'
-      dom.style.transform = 'translateY(-26px)'
-      dom.style.webkitTransform = 'translateY(-26px)'
-    }, 20)
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        dom.style.transition = `transform ${ANIMATION_DURATION}ms ease-out, opacity ${ANIMATION_DURATION}ms ease-out`
+        dom.style.opacity = '0'
+        dom.style.transform = 'translateY(-26px)'
+      }, ANIMATION_DELAY)
 
-    setTimeout(() => {
-      document.body.removeChild(dom)
-    }, 520)
+      setTimeout(() => {
+        dom.remove()
+      }, ANIMATION_DURATION + ANIMATION_DELAY)
+    })
   })
 }
 
@@ -179,17 +194,23 @@ blog.addLoadEvent(() => {
   const el = document.querySelector('.footer-btn.to-top')
   if (!el) return
   
-  const getScrollTop = () => document.documentElement.scrollTop || document.body.scrollTop
+  const SHOW_THRESHOLD = 200
+  let scrollTimeout
   
   const checkToShow = () => {
-    getScrollTop() > 200 ? blog.addClass(el, 'show') : blog.removeClass(el, 'show')
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    scrollTop > SHOW_THRESHOLD ? blog.addClass(el, 'show') : blog.removeClass(el, 'show')
   }
   
-  blog.addEvent(window, 'scroll', checkToShow)
-  blog.addEvent(el, 'click', (event) => {
-    window.scrollTo(0, 0)
+  el.addEventListener('click', (event) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     event.stopPropagation()
   }, true)
+  
+  window.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout)
+    scrollTimeout = requestAnimationFrame(checkToShow)
+  }, { passive: true })
   
   checkToShow()
 })
@@ -201,50 +222,48 @@ blog.addLoadEvent(() => {
   
   console.debug('init post img click event')
   
+  const IMG_SCALE = 0.9
+  const ANIMATION_DURATION = 300
+  
   let imgMoveOrigin = null
   let restoreLock = false
   const imgArr = document.querySelectorAll('.page-post img')
 
   const css = `
-    .img-move-bg {
-      transition: opacity 300ms ease;
-      position: fixed;
-      left: 0; top: 0; right: 0; bottom: 0;
-      opacity: 0;
-      background-color: #000000;
-      z-index: 100;
-    }
-    .img-move-item {
-      transition: all 300ms ease;
-      position: fixed;
-      opacity: 0;
-      cursor: pointer;
-      z-index: 101;
-    }
+    .img-move-bg { z-index: 100; }
+    .img-move-bg, .img-move-item { cursor: pointer; }
   `
   
   const styleDOM = document.createElement('style')
   styleDOM.textContent = css
   document.head.appendChild(styleDOM)
 
-  window.addEventListener('resize', toCenter)
-
-  imgArr.forEach(img => img.addEventListener('click', imgClickEvent, true))
+  const resizeObserver = new ResizeObserver(toCenter)
+  
+  imgArr.forEach(img => {
+    img.addEventListener('click', imgClickEvent, true)
+    resizeObserver.observe(window.visualViewport || window)
+  })
 
   const prevent = (ev) => ev.preventDefault()
 
   function toCenter() {
     if (!imgMoveOrigin) return
     
-    let width = Math.min(imgMoveOrigin.naturalWidth, window.innerWidth * 0.9)
-    let height = width * imgMoveOrigin.naturalHeight / imgMoveOrigin.naturalWidth
+    const maxWidth = window.innerWidth * IMG_SCALE
+    const maxHeight = window.innerHeight * 0.95
     
-    if (window.innerHeight * 0.95 < height) {
-      height = Math.min(imgMoveOrigin.naturalHeight, window.innerHeight * 0.95)
-      width = height * imgMoveOrigin.naturalWidth / imgMoveOrigin.naturalHeight
+    let width = Math.min(imgMoveOrigin.naturalWidth, maxWidth)
+    let height = (width / imgMoveOrigin.naturalWidth) * imgMoveOrigin.naturalHeight
+    
+    if (height > maxHeight) {
+      height = maxHeight
+      width = (height / imgMoveOrigin.naturalHeight) * imgMoveOrigin.naturalWidth
     }
 
     const img = document.querySelector('.img-move-item')
+    if (!img) return
+    
     img.style.left = `${(window.innerWidth - width) / 2}px`
     img.style.top = `${(window.innerHeight - height) / 2}px`
     img.style.width = `${width}px`
@@ -257,6 +276,8 @@ blog.addLoadEvent(() => {
     
     const div = document.querySelector('.img-move-bg')
     const img = document.querySelector('.img-move-item')
+    
+    if (!div || !img) return
 
     div.style.opacity = '0'
     img.style.opacity = '0'
@@ -267,33 +288,52 @@ blog.addLoadEvent(() => {
 
     setTimeout(() => {
       restoreLock = false
-      document.body.removeChild(div)
-      document.body.removeChild(img)
+      div.remove?.() || document.body.removeChild(div)
+      img.remove?.() || document.body.removeChild(img)
       imgMoveOrigin = null
-    }, 300)
+    }, ANIMATION_DURATION)
   }
 
   function imgClickEvent(event) {
+    if (imgMoveOrigin) return // 防止重复打开
+    
     imgMoveOrigin = event.target
     const { x, y, width, height, src } = imgMoveOrigin
 
     const div = document.createElement('div')
     div.className = 'img-move-bg'
+    div.style.cssText = `
+      transition: opacity ${ANIMATION_DURATION}ms ease;
+      position: fixed;
+      left: 0; top: 0; right: 0; bottom: 0;
+      opacity: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+    `
 
     const img = document.createElement('img')
     img.className = 'img-move-item'
     img.src = src
-    img.style.left = `${x}px`
-    img.style.top = `${y}px`
-    img.style.width = `${width}px`
-    img.style.height = `${height}px`
+    img.style.cssText = `
+      transition: all ${ANIMATION_DURATION}ms ease;
+      position: fixed;
+      opacity: 0;
+      left: ${x}px;
+      top: ${y}px;
+      width: ${width}px;
+      height: ${height}px;
+      z-index: 101;
+    `
 
-    [div, img].forEach(el => {
-      el.onclick = restore
-      el.onmousewheel = restore
-      el.ontouchmove = prevent
-    })
-    img.ondragstart = prevent
+    const handleClose = (e) => {
+      e.stopPropagation?.()
+      restore()
+    }
+    
+    div.addEventListener('click', handleClose)
+    img.addEventListener('click', handleClose)
+    img.addEventListener('wheel', handleClose)
+    img.addEventListener('touchmove', prevent)
+    img.addEventListener('dragstart', prevent)
 
     document.body.appendChild(div)
     document.body.appendChild(img)
@@ -309,7 +349,10 @@ blog.addLoadEvent(() => {
 // 切换夜间模式
 blog.addLoadEvent(() => {
   const themeBtn = document.querySelector('.footer-btn.theme-toggler')
+  if (!themeBtn) return
+  
   const themeIcon = themeBtn.querySelector('.svg-icon')
+  const TRANSITION_DURATION = 600
 
   blog.removeClass(themeBtn, 'hide')
   if (blog.darkMode) {
@@ -323,17 +366,17 @@ blog.addLoadEvent(() => {
     blog.addClass(themeIcon, isDark ? 'icon-theme-dark' : 'icon-theme-light')
     
     document.documentElement.setAttribute('transition', '')
-    setTimeout(() => document.documentElement.removeAttribute('transition'), 600)
+    setTimeout(() => document.documentElement.removeAttribute('transition'), TRANSITION_DURATION)
     blog.initDarkMode(isDark ? 'true' : 'false')
   }
 
-  blog.addEvent(themeBtn, 'click', () => {
+  themeBtn.addEventListener('click', () => {
     const flag = blog.darkMode ? 'false' : 'true'
     localStorage.darkMode = flag
     updateThemeIcon(flag === 'true')
   })
 
-  // 检测系统主题明暗丢改变
+  // 检测系统主题明暗改变
   window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener?.('change', (ev) => {
     const systemDark = ev.matches
     if (systemDark !== blog.darkMode) {
@@ -359,15 +402,15 @@ blog.addLoadEvent(() => {
   })
 })
 
-// 为页面图片启用缘加载
-// (下native lazy loading 支持)
+// 为页面图片启用懒加载
+// (降低native lazy loading支持)
 blog.addLoadEvent(() => {
   try {
     const imgs = document.querySelectorAll('img')
+    const logoImg = document.querySelector('.header .logo img')
+    
     imgs.forEach(img => {
-      if (!img.hasAttribute('loading')) {
-        // 跳过 logo 预载
-        if (img.closest?.('.header')?.querySelector?.('.logo')?.contains(img)) return
+      if (!img.hasAttribute('loading') && img !== logoImg) {
         img.setAttribute('loading', 'lazy')
       }
     })
