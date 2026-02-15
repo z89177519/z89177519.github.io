@@ -130,12 +130,14 @@
   font-size: 0;
   padding: 10px;
   overflow: auto;
-  border-radius: 2px;
+  border-radius: 4px;
   max-height: 610px;
   -moz-tab-size: 4;
   -o-tab-size: 4;
   tab-size: 4;
   line-height: 1.6;
+  background-color: var(--color-code-bg);
+  border: 1px solid var(--color-border);
 }
 .page-post code {
   font-size: 14px;
@@ -145,7 +147,7 @@
   margin: 0 4px;
   border-radius: 4px;
   color: var(--color-code);
-  font-family: 'Courier New', monospace;
+  font-family: 'Courier New', Consolas, monospace;
   font-weight: 500;
 }
 .page-post pre code {
@@ -193,7 +195,8 @@
 .page-post .table-container {
   overflow: auto;
   margin: 14px 0;
-  border: 1px solid #dddddd;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
 }
 .page-post .table-container table {
   margin: 0;
@@ -201,6 +204,13 @@
 }
 .page-post .table-container table tbody tr:last-child {
   border-bottom: 0;
+}
+
+/* 移动设备优化 */
+@media screen and (max-width: 680px) {
+  .page-post a {
+    word-break: break-all;
+  }
 }
 @media screen and (max-width: 560px) {
   .page-post {
