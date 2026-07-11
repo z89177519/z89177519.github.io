@@ -2,12 +2,16 @@ encoding: utf-8
 
 plugins:
   - jekyll-regex-replace
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
 
 # SEO相关信息
 title:  Blog
 description: 个人博客
 keywords: TMaize,Blog,Java,Html,JavaScript
-author: github.com
+author:
+  name: github.com
 footerText: 'Copyright © 2025'
 
 # 这些不要动
