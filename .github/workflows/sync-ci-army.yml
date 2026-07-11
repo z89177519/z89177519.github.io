@@ -22,9 +22,6 @@ jobs:
           curl -sSf -o static/txt/ci-army.txt \
             "https://cinsscore.com/list/ci-badguys.txt"
           echo "Fetched $(wc -l < static/txt/ci-army.txt) IPs at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-          # 写入同步时间戳
-          echo "" >> static/txt/ci-army.txt
-          echo "# Synced at $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> static/txt/ci-army.txt
 
       - name: Commit and push if changed
         run: |
