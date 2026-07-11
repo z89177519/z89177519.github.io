@@ -63,7 +63,7 @@ extCount: false
 
 # 评论系统 Giscus
 # 请在 https://giscus.app/ 获取你的配置
-extGiscus: true
+extGiscus: false
 giscus:
   repo: '' # 你的仓库 owner/repo(data-repo)
   repoId: '' # 你的仓库 ID(data-repo-id)
@@ -84,19 +84,3 @@ links:
     url: https://songxwn.com/
   - title:  杨杨得亿
     url: https://blog.yydy.link/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
