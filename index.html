@@ -22,7 +22,7 @@ title: 首页
         <h2 id="{{post_year}}">{{post_year}}</h2>
         <ul>
       {%- endif %}
-          <li>
+          <li class="has-excerpt">
             <div class="post-row">
               <time class="date" datetime="{{ post.date | date_to_xmlschema }}">
                 {{ post_year }}/{{ post_month_day }}

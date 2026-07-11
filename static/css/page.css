@@ -9,8 +9,13 @@
 }
 .list-post li {
   display: flex;
-  flex-flow: column nowrap;
+  align-items: center;
   padding: 8px 0;
+}
+/* 首页文章（带摘要）使用列布局 */
+.list-post li.has-excerpt {
+  flex-flow: column nowrap;
+  align-items: stretch;
 }
 .list-post li .date {
   color: var(--color-text-secondary);
