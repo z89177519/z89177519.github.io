@@ -3,3 +3,7 @@
 /dist.tar.gz
 /.jekyll-cache
 /.bundle
+/vendor
+.sass-cache
+.vscode/
+.idea/
