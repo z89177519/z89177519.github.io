@@ -238,6 +238,7 @@
   border: none;
   tab-size: 4;
   -moz-tab-size: 4;
+  font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
 }
 .page-txt .txt-loading,
 .page-txt .txt-error {
@@ -278,11 +279,6 @@
   color: var(--color-primary);
   font-weight: 600;
   white-space: nowrap;
-}
-
-/* CI Army 内容区（等宽字体更适合IP列表） */
-.page-txt .txt-content {
-  font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
 }
 
 @media screen and (max-width: 560px) {

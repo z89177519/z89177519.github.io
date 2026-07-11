@@ -249,7 +249,8 @@ input:-webkit-autofill {
   padding: 4px 0;
   text-align: center;
 }
-.header .menu .menu-dropdown:hover .menu-dropdown-content {
+.header .menu .menu-dropdown:hover .menu-dropdown-content,
+.header .menu .menu-dropdown:focus-within .menu-dropdown-content {
   display: block;
 }
 .header .menu .menu-dropdown-content a {
@@ -343,6 +344,10 @@ input:-webkit-autofill {
 .icon-arrow-top {
   mask-image: url('../img/icon-arrow-top.svg');
   -webkit-mask-image: url('../img/icon-arrow-top.svg');
+}
+.icon-refresh {
+  mask-image: url('../img/icon-refresh.svg');
+  -webkit-mask-image: url('../img/icon-refresh.svg');
 }
 
 /* ===== 动画和过渡效果 ===== */

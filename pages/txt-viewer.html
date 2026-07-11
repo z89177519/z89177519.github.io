@@ -33,12 +33,6 @@ custom_css:
       ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
   }
 
-  function escapeHtml(str) {
-    var div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
-    return div.innerHTML;
-  }
-
   function loadTxt() {
     if (loading) return;
     loading = true;
@@ -51,11 +45,19 @@ custom_css:
         return res.text();
       })
       .then(function(text) {
-        container.innerHTML = '<pre class="txt-content">' + escapeHtml(text) + '</pre>';
+        var pre = document.createElement('pre');
+        pre.className = 'txt-content';
+        pre.textContent = text;
+        container.innerHTML = '';
+        container.appendChild(pre);
         updateTime.textContent = '更新于 ' + formatTime(new Date());
       })
       .catch(function(err) {
-        container.innerHTML = '<div class="txt-error">加载失败：' + escapeHtml(err.message) + '</div>';
+        var errDiv = document.createElement('div');
+        errDiv.className = 'txt-error';
+        errDiv.textContent = '加载失败：' + err.message;
+        container.innerHTML = '';
+        container.appendChild(errDiv);
         updateTime.textContent = '加载失败';
       })
       .finally(function() {

@@ -38,10 +38,10 @@ menu:
   - title: 搜索
     url: /pages/search.html
   - title: 威胁情报
-    url: /static/txt/ci-army.txt
+    url: /pages/ci-army.html
     submenu:
       - title: 恶意IP
-        url: /static/txt/ci-army.txt
+        url: /pages/ci-army.html
   - title: 文本
     url: /pages/txt-viewer.html
   - title: 友链

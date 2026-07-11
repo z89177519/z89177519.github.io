@@ -2,7 +2,7 @@ name: Sync CI Army IP List
 
 on:
   schedule:
-    # 每小时同步一次（UTC 时间，每分钟更新一次列表）
+    # 每小时同步一次（UTC 整点执行）
     - cron: '0 * * * *'
   # 支持手动触发
   workflow_dispatch:
@@ -19,8 +19,14 @@ jobs:
       - name: Fetch CI Army IP list
         run: |
           mkdir -p static/txt
-          curl -sSf -o static/txt/ci-army.txt \
-            "https://cinsscore.com/list/ci-badguys.txt"
+          # 失败自动重试最多3次
+          for i in 1 2 3; do
+            curl -sSf --connect-timeout 30 --max-time 120 \
+              -o static/txt/ci-army.txt \
+              "https://cinsscore.com/list/ci-badguys.txt" && break
+            echo "Attempt $i failed, retrying..."
+            sleep 10
+          done
           echo "Fetched $(wc -l < static/txt/ci-army.txt) IPs at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
 
       - name: Commit and push if changed
