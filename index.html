@@ -23,20 +23,26 @@ title: 首页
         <ul>
       {%- endif %}
           <li>
-            <time class="date" datetime="{{ post.date | date_to_xmlschema }}">
-              {{ post_year }}/{{ post_month_day }}
-            </time>
-            <div class="title">
-              <a href="{{ site.baseurl }}{{ post.url }}" class="hover-underline">{{ post.title }}</a>
+            <div class="post-row">
+              <time class="date" datetime="{{ post.date | date_to_xmlschema }}">
+                {{ post_year }}/{{ post_month_day }}
+              </time>
+              <div class="title">
+                <a href="{{ site.baseurl }}{{ post.url }}" class="hover-underline">{{ post.title }}</a>
+              </div>
+              {% if post.categories.size > 0 %}
+              <div class="categories">
+                {% for category in post.categories -%}
+                  <a href="{{site.baseurl}}/pages/categories.html#{{ category }}" class="hover-underline">{{ category }}</a>
+                  {%- unless forloop.last %}<span class="separator"> · </span>{% endunless -%}
+                {%- endfor %}
+              </div>
+              {% endif %}
             </div>
-            {% if post.categories.size > 0 %}
-            <div class="categories">
-              {% for category in post.categories -%}
-                <a href="{{site.baseurl}}/pages/categories.html#{{ category }}" class="hover-underline">{{ category }}</a>
-                {%- unless forloop.last %}<span class="separator"> · </span>{% endunless -%}
-              {%- endfor %}
-            </div>
-            {% endif %}
+            {%- assign excerpt_text = post.content | strip_html | strip_newlines | truncate: 120 -%}
+            {%- if excerpt_text != '' -%}
+            <p class="excerpt">{{ excerpt_text }}</p>
+            {%- endif -%}
           </li>
       {%- if forloop.last or post_previous_year != post_year %}
         </ul>

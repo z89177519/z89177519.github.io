@@ -8,8 +8,12 @@
   {% if page.date %}
   <div class="subtitle">
     <span>{{site.author}} 于 {{ page.date | date: "%Y-%m-%d" }} 发布</span>
+    {%- assign post_chars = page.content | strip_html | strip_newlines | strip | size -%}
+    {%- assign reading_time = post_chars | divided_by: 400 -%}
+    {%- if reading_time < 1 -%}{% assign reading_time = 1 %}{%- endif -%}
+    <span class="reading-time"> · 约 {{ reading_time }} 分钟阅读</span>
     {%- if site.extCount %}
-      <span>浏览量</span>
+      <span> · 浏览量</span>
       <span id="busuanzi_value_page_pv"></span>
     {% endif %}
   </div>
@@ -17,6 +21,22 @@
   <div class="post">
     {{ content }}
   </div>
+  {% if page.previous or page.next -%}
+  <nav class="post-nav">
+    {% if page.previous -%}
+    <a class="post-nav-item prev" href="{{ site.baseurl }}{{ page.previous.url }}">
+      <span class="post-nav-label">← 上一篇</span>
+      <span class="post-nav-title">{{ page.previous.title }}</span>
+    </a>
+    {%- endif %}
+    {% if page.next -%}
+    <a class="post-nav-item next" href="{{ site.baseurl }}{{ page.next.url }}">
+      <span class="post-nav-label">下一篇 →</span>
+      <span class="post-nav-title">{{ page.next.title }}</span>
+    </a>
+    {%- endif %}
+  </nav>
+  {%- endif %}
   {% if site.extAdsense -%}
   <div class="adsense" style="overflow: hidden;">
     {% include ext-adsense.html -%}
