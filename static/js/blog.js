@@ -66,58 +66,6 @@ blog.encodeHtml = (str) => {
 }
 
 /**
- * 工具，转义正则关键字
- * @param {字符串} str
- */
-blog.encodeRegChar = (str) => str.replace(/[\\.^$*+?{}\[\]|()]/g, '\\$&')
-
-/**
- * 工具，Fetch API
- * @param {Object} option
- * @param {Function} success
- * @param {Function} fail
- */
-blog.ajax = async (option, success, fail) => {
-  const { url, method = 'GET', timeout = 10000 } = option
-  const controller = new AbortController()
-  
-  let timeoutId
-  try {
-    const timeoutPromise = new Promise((_, reject) => {
-      timeoutId = setTimeout(() => {
-        controller.abort()
-        reject(new Error('请求超时'))
-      }, timeout)
-    })
-    
-    const response = await Promise.race([
-      fetch(url, {
-        method: method.toUpperCase(),
-        signal: controller.signal,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      }),
-      timeoutPromise
-    ])
-    
-    clearTimeout(timeoutId)
-    
-    if (response.ok) {
-      const data = await response.text()
-      success?.(data)
-    } else {
-      fail?.({ error: '状态错误', code: response.status })
-    }
-  } catch (error) {
-    clearTimeout(timeoutId)
-    if (error.name === 'AbortError') {
-      fail?.({ error: '请求超时' })
-    } else {
-      fail?.({ error: error.message })
-    }
-  }
-}
-
-/**
  * 特效：点击页面文字冒出特效
  */
 blog.initClickEffect = (textArr) => {
@@ -162,17 +110,15 @@ blog.initClickEffect = (textArr) => {
     dom.style.top = `${ev.pageY - sh - h}px`
     dom.style.opacity = '1'
 
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        dom.style.transition = `transform ${ANIMATION_DURATION}ms ease-out, opacity ${ANIMATION_DURATION}ms ease-out`
-        dom.style.opacity = '0'
-        dom.style.transform = 'translateY(-26px)'
-      }, ANIMATION_DELAY)
+    setTimeout(() => {
+      dom.style.transition = `transform ${ANIMATION_DURATION}ms ease-out, opacity ${ANIMATION_DURATION}ms ease-out`
+      dom.style.opacity = '0'
+      dom.style.transform = 'translateY(-26px)'
+    }, ANIMATION_DELAY)
 
-      setTimeout(() => {
-        dom.remove()
-      }, ANIMATION_DURATION + ANIMATION_DELAY)
-    })
+    setTimeout(() => {
+      dom.remove()
+    }, ANIMATION_DURATION + ANIMATION_DELAY)
   })
 }
 

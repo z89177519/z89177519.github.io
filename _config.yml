@@ -37,6 +37,10 @@ menu:
     url: /pages/categories.html
   - title: 搜索
     url: /pages/search.html
+  - title: CI Army
+    url: /pages/ci-army.html
+  - title: 文本
+    url: /pages/txt-viewer.html
   - title: 友链
     url: /pages/links.html
  # - title: 留言
@@ -71,6 +75,7 @@ links:
     url: https://songxwn.com/
   - title:  杨杨得亿
     url: https://blog.yydy.link/
+
 
 
 

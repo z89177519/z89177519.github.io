@@ -67,12 +67,6 @@ html {
 html[transition] {
   transition: all 500ms ease;
 }
-html {
-  --color-code-bg: #f5f5f5;
-  --color-code: #d63384;
-  --color-input-bg: white;
-}
-
 html.dark {
   --color-text: var(--color-text-dark);
   --color-text-secondary: var(--color-text-secondary-dark);

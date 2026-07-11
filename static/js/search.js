@@ -116,7 +116,7 @@ blog.addLoadEvent(async () => {
   input.addEventListener('input', (event) => {
     if (!inputLock) {
       clearTimeout(searchTimeout)
-      searchTimeout = requestAnimationFrame(() => search(event.target.value))
+      searchTimeout = setTimeout(() => search(event.target.value), 200)
     }
   })
 

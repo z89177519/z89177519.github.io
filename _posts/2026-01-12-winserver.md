@@ -1,5 +1,5 @@
 ---
-layout: winserver 
+layout: mypost 
 title: "Windows Server 版本转换指南"
 categories: [server]
 ---

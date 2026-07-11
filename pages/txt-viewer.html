@@ -1,0 +1,72 @@
+---
+layout: page
+title: 文本展示
+custom_css:
+  - /static/css/page.css
+---
+<div class="page-txt main-content">
+  <div class="txt-toolbar">
+    <h1 class="txt-title">文本展示</h1>
+    <div class="txt-actions">
+      <span class="txt-update-time" id="txtUpdateTime"></span>
+      <button class="txt-refresh-btn" id="txtRefreshBtn" title="刷新文本">
+        <i class="svg-icon icon-refresh"></i>
+        <span>刷新</span>
+      </button>
+    </div>
+  </div>
+  <div class="txt-container" id="txtContainer">
+    <div class="txt-loading">加载中...</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var container = document.getElementById('txtContainer');
+  var updateTime = document.getElementById('txtUpdateTime');
+  var refreshBtn = document.getElementById('txtRefreshBtn');
+  var loading = false;
+
+  function formatTime(d) {
+    var pad = function(n) { return n < 10 ? '0' + n : n; };
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+      ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  function loadTxt() {
+    if (loading) return;
+    loading = true;
+    refreshBtn.classList.add('loading');
+    container.innerHTML = '<div class="txt-loading">加载中...</div>';
+
+    fetch('/static/txt/data.txt?t=' + Date.now(), { cache: 'no-store' })
+      .then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      })
+      .then(function(text) {
+        container.innerHTML = '<pre class="txt-content">' + escapeHtml(text) + '</pre>';
+        updateTime.textContent = '更新于 ' + formatTime(new Date());
+      })
+      .catch(function(err) {
+        container.innerHTML = '<div class="txt-error">加载失败：' + escapeHtml(err.message) + '</div>';
+        updateTime.textContent = '加载失败';
+      })
+      .finally(function() {
+        loading = false;
+        refreshBtn.classList.remove('loading');
+      });
+  }
+
+  refreshBtn.addEventListener('click', loadTxt);
+
+  // 首次加载
+  loadTxt();
+})();
+</script>

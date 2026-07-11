@@ -3,9 +3,10 @@
   <nav class="menu">
     {% for menu in site.menu -%}
 
-      {%- assign target = "" %}
+      {%- assign rel = "" %}
       {%- if menu.target %}
         {% capture target %}target="{{ menu.target }}"{% endcapture %}
+        {% assign rel = 'rel="noopener noreferrer"' %}
       {%- endif %}
 
       {%- assign href = menu.url %}
@@ -13,7 +14,7 @@
         {% capture href %}{{ site.baseurl }}{{ menu.url }}{% endcapture %}
       {%- endunless -%}
 
-      <a href="{{href}}" {{target}} class="hover-underline">{{ menu.title }}</a>
+      <a href="{{href}}" {{target}} {{rel}} class="hover-underline">{{ menu.title }}</a>
     {% endfor -%}
   </nav>
 </header>

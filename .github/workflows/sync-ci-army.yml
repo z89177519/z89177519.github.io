@@ -1,0 +1,39 @@
+name: Sync CI Army IP List
+
+on:
+  schedule:
+    # 每小时同步一次（UTC 时间，每分钟更新一次列表）
+    - cron: '0 * * * *'
+  # 支持手动触发
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch CI Army IP list
+        run: |
+          mkdir -p static/txt
+          curl -sSf -o static/txt/ci-army.txt \
+            "https://cinsscore.com/list/ci-badguys.txt"
+          echo "Fetched $(wc -l < static/txt/ci-army.txt) IPs at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          # 写入同步时间戳
+          echo "" >> static/txt/ci-army.txt
+          echo "# Synced at $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> static/txt/ci-army.txt
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add static/txt/ci-army.txt
+          if git diff --cached --quiet; then
+            echo "No changes, skipping commit"
+          else
+            git commit -m "chore: sync CI Army IP list [skip ci]"
+            git push
+          fi

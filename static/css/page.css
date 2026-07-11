@@ -166,6 +166,125 @@
   padding: 2px 4px;
   border-radius: 2px;
 }
+/* TXT 展示页面 */
+.page-txt .txt-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+.page-txt .txt-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+.page-txt .txt-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.page-txt .txt-update-time {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+.page-txt .txt-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  font-size: 14px;
+  color: white;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+.page-txt .txt-refresh-btn:hover {
+  background-color: var(--color-primary-dark, #3a9a7e);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.page-txt .txt-refresh-btn:active {
+  transform: translateY(0);
+}
+.page-txt .txt-refresh-btn.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+.page-txt .txt-container {
+  background-color: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.page-txt .txt-content {
+  margin: 0;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-height: 70vh;
+  overflow-y: auto;
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+  tab-size: 4;
+  -moz-tab-size: 4;
+}
+.page-txt .txt-loading,
+.page-txt .txt-error {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+}
+.page-txt .txt-error {
+  color: #e74c3c;
+}
+
+/* CI Army 搜索栏 */
+.ci-search-bar {
+  margin-bottom: var(--space-md);
+}
+.ci-search-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-input-bg);
+  color: var(--color-text);
+  transition: all var(--transition-normal);
+  box-sizing: border-box;
+}
+.ci-search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(75, 181, 150, 0.1);
+}
+.ci-search-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+.ci-count {
+  font-size: 13px;
+  color: var(--color-primary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* CI Army 内容区（等宽字体更适合IP列表） */
+.page-txt .txt-content {
+  font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
+}
+
 @media screen and (max-width: 560px) {
   .list-post > h2 {
     padding: 10px 0;
