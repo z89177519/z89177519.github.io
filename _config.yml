@@ -39,6 +39,9 @@ menu:
     url: /pages/search.html
   - title: 威胁情报
     url: /static/txt/ci-army.txt
+    submenu:
+      - title: IP地址库
+        url: /static/txt/ci-army.txt
   - title: 文本
     url: /pages/txt-viewer.html
   - title: 友链

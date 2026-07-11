@@ -14,7 +14,22 @@
         {% capture href %}{{ site.baseurl }}{{ menu.url }}{% endcapture %}
       {%- endunless -%}
 
+      {%- if menu.submenu %}
+      <div class="menu-dropdown">
+        <a href="{{href}}" {{target}} {{rel}} class="hover-underline menu-dropdown-toggle">{{ menu.title }}</a>
+        <div class="menu-dropdown-content">
+          {% for sub in menu.submenu -%}
+            {%- assign sub_href = sub.url %}
+            {%- unless sub_href contains "://" %}
+              {% capture sub_href %}{{ site.baseurl }}{{ sub.url }}{% endcapture %}
+            {%- endunless -%}
+            <a href="{{sub_href}}" class="hover-underline">{{ sub.title }}</a>
+          {% endfor -%}
+        </div>
+      </div>
+      {%- else %}
       <a href="{{href}}" {{target}} {{rel}} class="hover-underline">{{ menu.title }}</a>
+      {%- endif %}
     {% endfor -%}
   </nav>
 </header>
