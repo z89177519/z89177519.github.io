@@ -262,21 +262,6 @@ input:-webkit-autofill {
   background: var(--color-bg-secondary);
   color: var(--color-primary);
 }
-.header .menu a.active {
-  color: var(--color-primary);
-  font-weight: 600;
-}
-.header .menu a.active::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 2px;
-  background-color: var(--color-primary);
-  border-radius: 1px;
-}
 .header .menu .menu-dropdown {
   position: relative;
 }

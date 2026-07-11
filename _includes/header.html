@@ -28,12 +28,7 @@
         </div>
       </div>
       {%- else %}
-        {%- assign page_match = page.url | remove: '.html' -%}
-        {%- assign menu_match = menu.url | remove: '.html' -%}
-        {%- capture nav_class -%}
-          hover-underline{% if page_match == menu_match %} active{% endif %}
-        {%- endcapture -%}
-      <a href="{{href}}" {{target}} {{rel}} class="{{ nav_class | strip }}">{{ menu.title }}</a>
+      <a href="{{href}}" {{target}} {{rel}} class="hover-underline">{{ menu.title }}</a>
       {%- endif %}
     {% endfor -%}
   </nav>
