@@ -1,136 +1,19 @@
 ---
 layout: page
-title: CI Army 恶意IP
-custom_css:
-  - /static/css/page.css
+title: 威胁情报
 ---
-<div class="page-txt main-content">
-  <div class="txt-toolbar">
-    <h1 class="txt-title">CI Army 恶意IP列表</h1>
-    <div class="txt-actions">
-      <span class="txt-update-time" id="ciUpdateTime"></span>
-      <span class="ci-count" id="ciCount"></span>
-      <button class="txt-refresh-btn" id="ciRefreshBtn" title="刷新列表">
-        <i class="svg-icon icon-refresh"></i>
-        <span>刷新</span>
-      </button>
-    </div>
-  </div>
-  <div class="ci-search-bar">
-    <input
-      type="text"
-      id="ciSearchInput"
-      class="ci-search-input"
-      placeholder="输入IP地址搜索过滤..."
-      autocomplete="off"
-    />
-  </div>
-  <div class="txt-container" id="ciContainer">
-    <div class="txt-loading">加载中...</div>
+<div class="page page-index">
+  <div class="list-post">
+    <h2>IP情报</h2>
+    <ul>
+      <li>
+        <div class="title">
+          <a href="{{ site.baseurl }}/static/txt/ci-army.txt" class="hover-underline">CI Army 恶意IP列表</a>
+        </div>
+        <div class="categories">
+          <span class="separator">恶意IP黑名单，每小时自动同步</span>
+        </div>
+      </li>
+    </ul>
   </div>
 </div>
-
-<script>
-(function() {
-  var container = document.getElementById('ciContainer');
-  var updateTime = document.getElementById('ciUpdateTime');
-  var countEl = document.getElementById('ciCount');
-  var refreshBtn = document.getElementById('ciRefreshBtn');
-  var searchInput = document.getElementById('ciSearchInput');
-  var loading = false;
-  var allIPs = [];
-  var filteredIPs = [];
-  var lastSyncTime = '';
-
-  function formatTime(d) {
-    var pad = function(n) { return n < 10 ? '0' + n : n; };
-    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
-      ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-  }
-
-  function render(ips) {
-    if (ips.length === 0) {
-      container.innerHTML = '<div class="txt-loading">无匹配结果</div>';
-      return;
-    }
-    var pre = document.createElement('pre');
-    pre.className = 'txt-content';
-    pre.textContent = ips.join('\n');
-    container.innerHTML = '';
-    container.appendChild(pre);
-  }
-
-  function doSearch() {
-    var keyword = searchInput.value.trim();
-    if (!keyword) {
-      filteredIPs = allIPs;
-    } else {
-      filteredIPs = allIPs.filter(function(ip) {
-        return ip.indexOf(keyword) !== -1;
-      });
-    }
-    countEl.textContent = '匹配 ' + filteredIPs.length + ' / 共 ' + allIPs.length + ' 个IP';
-    render(filteredIPs);
-  }
-
-  var searchTimer = null;
-  searchInput.addEventListener('input', function() {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(doSearch, 200);
-  });
-
-  function loadList() {
-    if (loading) return;
-    loading = true;
-    refreshBtn.classList.add('loading');
-    container.innerHTML = '<div class="txt-loading">加载中...</div>';
-
-    fetch('/static/txt/ci-army.txt?t=' + Date.now(), { cache: 'no-store' })
-      .then(function(res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.text();
-      })
-      .then(function(text) {
-        var lines = text.split('\n');
-        var ips = [];
-        lastSyncTime = '';
-        for (var i = 0; i < lines.length; i++) {
-          var line = lines[i].trim();
-          if (!line) continue;
-          if (line.indexOf('# Synced at ') === 0) {
-            lastSyncTime = line.substring(12);
-            continue;
-          }
-          if (line.charAt(0) === '#') continue;
-          // 只保留有效IP地址行
-          if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(line)) {
-            ips.push(line);
-          }
-        }
-        allIPs = ips;
-        updateTime.textContent = lastSyncTime ? '同步于 ' + lastSyncTime : '';
-        doSearch();
-      })
-      .catch(function(err) {
-        var errDiv = document.createElement('div');
-        errDiv.className = 'txt-error';
-        errDiv.textContent = '加载失败：' + err.message;
-        var hint = document.createElement('small');
-        hint.textContent = '请确保 GitHub Actions 已完成首次同步';
-        errDiv.appendChild(document.createElement('br'));
-        errDiv.appendChild(hint);
-        container.innerHTML = '';
-        container.appendChild(errDiv);
-        updateTime.textContent = '加载失败';
-        countEl.textContent = '';
-      })
-      .finally(function() {
-        loading = false;
-        refreshBtn.classList.remove('loading');
-      });
-  }
-
-  refreshBtn.addEventListener('click', loadList);
-  loadList();
-})();
-</script>
