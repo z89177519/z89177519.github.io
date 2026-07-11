@@ -36,19 +36,20 @@ title: 威胁情报
       String(d.getMinutes()).padStart(2,'0');
   }
 
-  function loadSyncTime(file, elId, fallback) {
+  function loadMeta(metaUrl, elId, fallback) {
     var el = document.getElementById(elId);
-    fetch('https://api.github.com/repos/z89177519/z89177519.github.io/commits?path=static/txt/' + file + '&page=1&per_page=1')
+    fetch(metaUrl)
       .then(function(res) { return res.json(); })
       .then(function(data) {
-        el.textContent = '最后同步：' + formatDate(new Date(data[0].commit.committer.date));
+        el.textContent = '最后同步：' + formatDate(new Date(data.lastSync)) +
+          ' · ' + data.ipCount.toLocaleString() + '条IP';
       })
       .catch(function() {
         el.textContent = fallback;
       });
   }
 
-  loadSyncTime('ci-army.txt', 'syncTime-ci-army', '恶意IP黑名单，每小时自动同步');
-  loadSyncTime('blocklist-de.txt', 'syncTime-blocklist-de', '等待首次同步...');
+  loadMeta('{{ site.baseurl }}/static/txt/ci-army-meta.json', 'syncTime-ci-army', '等待首次同步...');
+  loadMeta('{{ site.baseurl }}/static/txt/blocklist-de-meta.json', 'syncTime-blocklist-de', '等待首次同步...');
 })();
 </script>
