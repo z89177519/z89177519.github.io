@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="applicable-device" content="pc,mobile" />
   {%- if page.categories %}
-  <meta name="keywords" content="{{ site.author }}{% for category in page.categories %},{{ category }}{% endfor %}" />
+  <meta name="keywords" content="{{ site.keywords }}{% for category in page.categories %},{{ category }}{% endfor %}" />
   {% else %}
   <meta name="keywords" content="{{ site.keywords }}" />
   {% endif -%}

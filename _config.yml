@@ -10,8 +10,7 @@ plugins:
 title:  Blog
 description: 个人博客
 keywords: TMaize,Blog,Java,Html,JavaScript
-author:
-  name: github.com
+author: github.com
 footerText: 'Copyright © 2025'
 
 # 这些不要动
