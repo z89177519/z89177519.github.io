@@ -1,0 +1,40 @@
+name: Sync Blocklist.de IP List
+
+on:
+  schedule:
+    # 每小时同步一次（UTC 整点执行）
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch Blocklist.de IP list
+        run: |
+          mkdir -p static/txt
+          for i in 1 2 3; do
+            curl -sSf --connect-timeout 30 --max-time 120 \
+              -o static/txt/blocklist-de.txt \
+              "https://lists.blocklist.de/lists/all.txt" && break
+            echo "Attempt $i failed, retrying..."
+            sleep 10
+          done
+          echo "Fetched $(wc -l < static/txt/blocklist-de.txt) IPs at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add static/txt/blocklist-de.txt
+          if git diff --cached --quiet; then
+            echo "No changes, skipping commit"
+          else
+            git commit -m "chore: sync Blocklist.de IP list [skip ci]"
+            git push
+          fi

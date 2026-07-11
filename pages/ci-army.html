@@ -11,7 +11,15 @@ title: 威胁情报
           <a href="{{ site.baseurl }}/static/txt/ci-army.txt" class="hover-underline">CI Army 恶意IP列表</a>
         </div>
         <div class="categories">
-          <span class="separator" id="ciSyncTime">加载中...</span>
+          <span class="separator" id="syncTime-ci-army">加载中...</span>
+        </div>
+      </li>
+      <li>
+        <div class="title">
+          <a href="{{ site.baseurl }}/static/txt/blocklist-de.txt" class="hover-underline">Blocklist.de</a>
+        </div>
+        <div class="categories">
+          <span class="separator" id="syncTime-blocklist-de">加载中...</span>
         </div>
       </li>
     </ul>
@@ -20,19 +28,27 @@ title: 威胁情报
 
 <script>
 (function() {
-  var el = document.getElementById('ciSyncTime');
-  fetch('https://api.github.com/repos/z89177519/z89177519.github.io/commits?path=static/txt/ci-army.txt&page=1&per_page=1')
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-      var d = new Date(data[0].commit.committer.date);
-      el.textContent = '最后同步：' + d.getFullYear() + '-' +
-        String(d.getMonth()+1).padStart(2,'0') + '-' +
-        String(d.getDate()).padStart(2,'0') + ' ' +
-        String(d.getHours()).padStart(2,'0') + ':' +
-        String(d.getMinutes()).padStart(2,'0');
-    })
-    .catch(function() {
-      el.textContent = '恶意IP黑名单，每小时自动同步';
-    });
+  function formatDate(d) {
+    return d.getFullYear() + '-' +
+      String(d.getMonth()+1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0') + ' ' +
+      String(d.getHours()).padStart(2,'0') + ':' +
+      String(d.getMinutes()).padStart(2,'0');
+  }
+
+  function loadSyncTime(file, elId, fallback) {
+    var el = document.getElementById(elId);
+    fetch('https://api.github.com/repos/z89177519/z89177519.github.io/commits?path=static/txt/' + file + '&page=1&per_page=1')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        el.textContent = '最后同步：' + formatDate(new Date(data[0].commit.committer.date));
+      })
+      .catch(function() {
+        el.textContent = fallback;
+      });
+  }
+
+  loadSyncTime('ci-army.txt', 'syncTime-ci-army', '恶意IP黑名单，每小时自动同步');
+  loadSyncTime('blocklist-de.txt', 'syncTime-blocklist-de', 'Blocklist.de IP黑名单，每小时自动同步');
 })();
 </script>
