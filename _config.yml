@@ -41,7 +41,7 @@ menu:
     url: /pages/ci-army.html
     submenu:
       - title: 恶意IP
-        url: /pages/ci-army.html
+        url: /static/txt/ci-army.txt
   - title: 文本
     url: /pages/txt-viewer.html
   - title: 友链
