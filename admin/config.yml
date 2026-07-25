@@ -12,9 +12,9 @@ backend:
   #    Callback URL: 填下面 base_url 的 /callback，例如
   #                  https://你的worker.workers.dev/callback
   app_id: Ov23lioRdgEWBmFGNlvh
-  # ② 部署 admin/oauth-worker.js 到 Cloudflare Worker 后，把地址填到这里
+  # ② 部署 api/auth.js 到 Vercel 后，把项目地址填到这里
   #    （浏览器无法直连 GitHub 换 token，必须经过此代理）
-  base_url: https://REPLACE-ME.workers.dev
+  base_url: https://REPLACE-ME.vercel.app/api
   auth_endpoint: auth
 
 # 站点域名
