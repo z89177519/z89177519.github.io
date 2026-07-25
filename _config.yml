@@ -7,10 +7,10 @@ plugins:
   - jekyll-feed
 
 # SEO相关信息
-title:  Blog
-description: 个人博客
-keywords: TMaize,Blog,Java,Html,JavaScript
-author: github.com
+title: z89177519 的技术博客
+description: 网络工程、Windows 系统运维、威胁情报与安全技术分享
+keywords: 网络工程,Windows,威胁情报,Nginx,安全技术,运维
+author: z89177519
 footerText: 'Copyright © 2025'
 
 # 这些不要动
