@@ -1,5 +1,9 @@
 encoding: utf-8
 
+# Sveltia 在中国时区保存的当前时间会被 Jekyll (UTC) 当成未来日期
+# 开启 future 允许发布未来日期的文章
+future: true
+
 plugins:
   - jekyll-regex-replace
   - jekyll-seo-tag
