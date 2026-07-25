@@ -42,13 +42,7 @@
 .page-post .post h2:hover {
   color: var(--color-primary);
 }
-.page-post .post h1::before,
-.page-post .post h2::before {
-  content: '#';
-  top: 0;
-  font-weight: bold;
-  padding-right: 6px;
-}
+
 .page-post h3,
 .page-post h4,
 .page-post h5,
