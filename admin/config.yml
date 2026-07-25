@@ -7,9 +7,8 @@ backend:
   name: github
   repo: z89177519/z89177519.github.io
   branch: master
-  # GitHub OAuth App（保留，可选用于 OAuth 登录）
-  app_id: Ov23lioRdgEWBmFGNlvh
-  # 不需要 base_url + auth_endpoint：Sveltia CMS 原生支持 GitHub PAT 登录
+  # 不需要 app_id / base_url / auth_endpoint：
+  # Sveltia CMS 用 GitHub PAT 直连，不走 OAuth
 
 # 站点域名
 site_url: https://z89177519.github.io
