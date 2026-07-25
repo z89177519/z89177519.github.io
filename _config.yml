@@ -54,6 +54,9 @@ menu:
 # 点击页面文字冒出特效,不需要请设置为false
 extClickEffect: true
 
+# Service Worker 离线缓存,不需要请设置为false
+extServiceWorker: true
+
 # Google Adsense,不需要请设置为false
 # _includes/ext-adsense.html 里面修改为自己的配置
 extAdsense: false
