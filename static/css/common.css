@@ -60,7 +60,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Segoe UI', -apple-system, system-ui, Helvetica, 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
-  overflow-y: overlay;
+  overflow-y: auto;
   font-size: 16px;
   line-height: 1.6;
 }
