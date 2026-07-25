@@ -6,38 +6,14 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>内容管理 · z89177519 的技术博客</title>
   <link rel="icon" href="/favicon.ico" />
-  <style>
-    body { margin: 0; background: #f5f5f5; }
-    /* CMS 加载前的骨架屏 */
-    .cms-loader {
-      display: flex; align-items: center; justify-content: center;
-      height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #666; font-size: 16px;
-    }
-    .cms-loader::before {
-      content: "";
-      width: 24px; height: 24px;
-      border: 3px solid #ddd; border-top-color: #ff3b00;
-      border-radius: 50%; animation: spin 0.8s linear infinite;
-      margin-right: 12px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
 </head>
 <body>
-  <div class="cms-loader">CMS 加载中…</div>
   <!--
-    使用 Sveltia CMS（Decap 的 drop-in 替代品）
-    优势：原生支持 GitHub PAT 登录，无需任何外部 OAuth 代理
-    部署说明：访问 https://github.com/settings/tokens 生成 Fine-grained PAT，
-             登录时粘贴即可。Token 仅存于浏览器 localStorage，不上传任何服务器。
+    Sveltia CMS — PAT 登录，无需任何外部 OAuth 后端
+    1. 生成 Fine-grained PAT: https://github.com/settings/tokens?type=beta
+       仓库授权：本仓库；权限：Contents=Read and write
+    2. 点下方 "Sign In Using Access Token" → 粘贴 PAT → 进后台
   -->
   <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
-  <script>
-    window.addEventListener("load", function () {
-      var loader = document.querySelector(".cms-loader");
-      if (loader) loader.remove();
-    });
-  </script>
 </body>
 </html>
