@@ -39,6 +39,11 @@
   transition: all var(--transition-normal);
   border-bottom: 2px solid transparent;
 }
+/* 首页摘要标题加粗放大 */
+.list-post li.has-excerpt .title a {
+  font-size: 16px;
+  font-weight: 700;
+}
 .list-post li .title a:hover {
   color: var(--color-primary);
   border-bottom-color: var(--color-primary);
@@ -64,60 +69,10 @@
   color: white;
   border-color: var(--color-primary-dark);
 }
-
-/* 首页文章摘要 */
 .list-post .post-row {
   display: flex;
   align-items: center;
   width: 100%;
-}
-.list-post .post-row .date {
-  color: var(--color-text-secondary);
-  font-size: 13px;
-  flex-shrink: 0;
-  margin-right: var(--space-md);
-  font-weight: 500;
-}
-.list-post .post-row .title {
-  width: 0;
-  flex-grow: 1;
-  padding: var(--space-sm) 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.list-post .post-row .title a {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-text);
-  text-decoration: none;
-  transition: all var(--transition-normal);
-  border-bottom: 2px solid transparent;
-}
-.list-post .post-row .title a:hover {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
-}
-.list-post .post-row .categories {
-  flex-shrink: 0;
-  padding: var(--space-xs) 0;
-  margin-left: var(--space-md);
-  display: flex;
-  gap: var(--space-sm);
-}
-.list-post .post-row .categories a {
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  background-color: var(--color-shadow);
-  padding: 2px var(--space-sm);
-  border-radius: 12px;
-  transition: all var(--transition-normal);
-  border: 1px solid transparent;
-}
-.list-post .post-row .categories a:hover {
-  background-color: var(--color-primary);
-  color: white;
-  border-color: var(--color-primary-dark);
 }
 .list-post .excerpt {
   font-size: 13px;
@@ -355,12 +310,10 @@
   .list-post li {
     padding: 6px 0;
   }
-  .list-post .post-row .title a,
   .list-post li .title a {
     font-size: 14px;
   }
-  .list-post .categories,
-  .list-post .post-row .categories {
+  .list-post li .categories {
     display: none;
   }
   .list-post .excerpt {
