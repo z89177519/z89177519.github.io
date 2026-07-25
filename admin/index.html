@@ -17,7 +17,7 @@
     .cms-loader::before {
       content: "";
       width: 24px; height: 24px;
-      border: 3px solid #ddd; border-top-color: #4bb596;
+      border: 3px solid #ddd; border-top-color: #ff3b00;
       border-radius: 50%; animation: spin 0.8s linear infinite;
       margin-right: 12px;
     }
@@ -26,14 +26,14 @@
 </head>
 <body>
   <div class="cms-loader">CMS 加载中…</div>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <!--
+    使用 Sveltia CMS（Decap 的 drop-in 替代品）
+    优势：原生支持 GitHub PAT 登录，无需任何外部 OAuth 代理
+    部署说明：访问 https://github.com/settings/tokens 生成 Fine-grained PAT，
+             登录时粘贴即可。Token 仅存于浏览器 localStorage，不上传任何服务器。
+  -->
+  <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
   <script>
-    // 加载完成后移除骨架屏
-    if (window.CMS) {
-      CMS.registerPreviewStyle("/static/css/common.css");
-      CMS.registerPreviewStyle("/static/css/page.css");
-      CMS.registerPreviewStyle("/static/css/post.css");
-    }
     window.addEventListener("load", function () {
       var loader = document.querySelector(".cms-loader");
       if (loader) loader.remove();

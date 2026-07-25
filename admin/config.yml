@@ -7,15 +7,9 @@ backend:
   name: github
   repo: z89177519/z89177519.github.io
   branch: master
-  # ① GitHub OAuth App（已有）
-  #    Homepage URL:  https://z89177519.github.io
-  #    Callback URL: 填下面 base_url 的 /callback，例如
-  #                  https://你的worker.workers.dev/callback
+  # GitHub OAuth App（保留，可选用于 OAuth 登录）
   app_id: Ov23lioRdgEWBmFGNlvh
-  # ② 部署 api/auth.js 到 Vercel 后，把项目地址填到这里
-  #    （浏览器无法直连 GitHub 换 token，必须经过此代理）
-  base_url: https://REPLACE-ME.vercel.app/api
-  auth_endpoint: auth
+  # 不需要 base_url + auth_endpoint：Sveltia CMS 原生支持 GitHub PAT 登录
 
 # 站点域名
 site_url: https://z89177519.github.io
