@@ -1,0 +1,3 @@
+name = "z89177519-cms-oauth"
+main = "oauth-worker.js"
+compatibility_date = "2025-12-01"
