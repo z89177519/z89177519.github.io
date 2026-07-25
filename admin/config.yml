@@ -7,13 +7,15 @@ backend:
   name: github
   repo: z89177519/z89177519.github.io
   branch: master
-  # ① 去 https://github.com/settings/developers 创建 OAuth App
+  # ① GitHub OAuth App（已有）
   #    Homepage URL:  https://z89177519.github.io
-  #    Callback URL:  https://z89177519.github.io/admin/
-  #    创建后把 Client ID 填到下面 app_id：
+  #    Callback URL: 填下面 base_url 的 /callback，例如
+  #                  https://你的worker.workers.dev/callback
   app_id: Ov23lioRdgEWBmFGNlvh
-  # 使用 PKCE 流程，无需额外代理服务器
-  auth_type: pkce
+  # ② 部署 admin/oauth-worker.js 到 Cloudflare Worker 后，把地址填到这里
+  #    （浏览器无法直连 GitHub 换 token，必须经过此代理）
+  base_url: https://REPLACE-ME.workers.dev
+  auth_endpoint: auth
 
 # 站点域名
 site_url: https://z89177519.github.io
