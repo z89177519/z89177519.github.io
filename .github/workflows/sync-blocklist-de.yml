@@ -14,18 +14,32 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 1
 
       - name: Fetch Blocklist.de IP list
+        id: fetch
         run: |
           mkdir -p static/txt
+          HTTP_CODE=0
           for i in 1 2 3; do
-            curl -sSf --connect-timeout 30 --max-time 120 \
+            HTTP_CODE=$(curl -sSfL --connect-timeout 30 --max-time 120 \
               -o static/txt/blocklist-de.txt \
-              "https://lists.blocklist.de/lists/all.txt" && break
-            echo "Attempt $i failed, retrying..."
+              -w "%{http_code}" \
+              "https://lists.blocklist.de/lists/all.txt" 2>/dev/null) && break
+            echo "Attempt $i failed (HTTP $HTTP_CODE), retrying in 10s..."
             sleep 10
           done
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::All 3 fetch attempts failed (last HTTP code: $HTTP_CODE)"
+            exit 1
+          fi
           COUNT=$(wc -l < static/txt/blocklist-de.txt)
+          if [ "$COUNT" -lt 100 ]; then
+            echo "::error::Fetched only $COUNT IPs, something is wrong — aborting"
+            exit 1
+          fi
           NOW=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           echo "{\"lastSync\":\"$NOW\",\"ipCount\":$COUNT,\"source\":\"lists.blocklist.de/lists/all.txt\"}" > static/txt/blocklist-de-meta.json
           echo "Fetched $COUNT IPs at $NOW"
@@ -37,7 +51,19 @@ jobs:
           git add static/txt/blocklist-de.txt static/txt/blocklist-de-meta.json
           if git diff --cached --quiet; then
             echo "No changes, skipping commit"
-          else
-            git commit -m "chore: sync Blocklist.de IP list [skip ci]"
-            git push
+            exit 0
           fi
+          git commit -m "chore: sync Blocklist.de IP list"
+          # 先拉取远程最新，避免冲突
+          git pull --rebase origin master
+          # 推送，失败重试最多 3 次
+          for i in 1 2 3; do
+            if git push origin master; then
+              echo "Push succeeded"
+              exit 0
+            fi
+            echo "Push attempt $i failed, retrying in 15s..."
+            sleep 15
+          done
+          echo "::error::Push failed after 3 attempts"
+          exit 1
