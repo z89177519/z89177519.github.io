@@ -76,17 +76,4 @@ giscus:
   category: '' # 你的分类名称(data-category)
   categoryId: '' # 你的分类 ID(data-category-id)
 
-# 友情链接
-links:
-  - title: images
-    url: https://files.rg-adguard.net/
-  - title: vmware
-    url: https://www.dinghui.org/
-  - title: windows
-    url: https://massgrave.dev/genuine-installation-media
-  - title:  mac-os
-    url: https://sysin.org/
-  - title:  网工格物
-    url: https://songxwn.com/
-  - title:  杨杨得亿
-    url: https://blog.yydy.link/
+# 友情链接已迁至 _data/links.yml，由 Decap CMS 管理

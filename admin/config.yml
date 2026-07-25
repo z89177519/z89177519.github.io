@@ -1,0 +1,94 @@
+# ============================================================
+#  Decap CMS 配置 · z89177519 的技术博客
+#  GitHub OAuth 设置在步骤 ①，其余不用动
+# ============================================================
+
+backend:
+  name: github
+  repo: z89177519/z89177519.github.io
+  branch: master
+  # ① 去 https://github.com/settings/developers 创建 OAuth App
+  #    Homepage URL:  https://z89177519.github.io
+  #    Callback URL:  https://z89177519.github.io/admin/
+  #    创建后把 Client ID 填到下面 app_id：
+  app_id: CHANGE_ME
+  # 使用 PKCE 流程，无需额外代理服务器
+  auth_type: pkce
+
+# 站点域名
+site_url: https://z89177519.github.io
+display_url: https://z89177519.github.io
+logo_url: /favicon.ico
+
+# 媒体文件存放（图片粘贴自动保存到这里）
+media_folder: "posts/images"
+public_folder: "/posts/images"
+
+# -----------------------------------------------------------
+#  文章集合（_posts）
+# -----------------------------------------------------------
+collections:
+  - name: "posts"
+    label: "文章"
+    label_singular: "文章"
+    description: "博客文章，存放于 _posts/"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: "/{{year}}/{{month}}/{{day}}/{{slug}}"
+    summary: "{{title}} — {{date | date('YYYY-MM-DD')}}"
+    sortable_fields: ["date", "title", "categories"]
+
+    # 编辑器字段
+    fields:
+      - label: "布局模板"
+        name: "layout"
+        widget: "hidden"
+        default: "mypost"
+
+      - label: "文章标题"
+        name: "title"
+        widget: "string"
+        hint: "会显示在页面标题和列表卡片中"
+
+      - label: "发布日期"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD HH:mm:ss"
+        date_format: "YYYY-MM-DD"
+        time_format: "HH:mm:ss"
+        picker_utc: false
+        default: "{{now}}"
+        hint: "留空则使用当前时间"
+
+      - label: "分类"
+        name: "categories"
+        widget: "list"
+        default: []
+        hint: "可添加多个，如: network, windows, security"
+
+      - label: "正文"
+        name: "body"
+        widget: "markdown"
+        hint: "使用 Markdown 语法写作"
+
+  # -----------------------------------------------------------
+  #  友链管理（独立数据文件，不影响 _config.yml）
+  # -----------------------------------------------------------
+  - name: "settings"
+    label: "站点设置"
+    description: "全局配置项"
+    editor:
+      preview: false
+    files:
+      - label: "友情链接"
+        name: "links"
+        file: "_data/links.yml"
+        fields:
+          - label: "友链列表"
+            name: "links"
+            widget: "list"
+            summary: "{{title}} → {{url}}"
+            fields:
+              - {label: "站点名称", name: "title", widget: "string"}
+              - {label: "链接地址", name: "url", widget: "string"}

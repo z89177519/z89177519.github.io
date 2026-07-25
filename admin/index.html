@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>内容管理 · z89177519 的技术博客</title>
+  <link rel="icon" href="/favicon.ico" />
+  <style>
+    body { margin: 0; background: #f5f5f5; }
+    /* CMS 加载前的骨架屏 */
+    .cms-loader {
+      display: flex; align-items: center; justify-content: center;
+      height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #666; font-size: 16px;
+    }
+    .cms-loader::before {
+      content: "";
+      width: 24px; height: 24px;
+      border: 3px solid #ddd; border-top-color: #4bb596;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+      margin-right: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="cms-loader">CMS 加载中…</div>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    // 加载完成后移除骨架屏
+    if (window.CMS) {
+      CMS.registerPreviewStyle("/static/css/common.css");
+      CMS.registerPreviewStyle("/static/css/page.css");
+      CMS.registerPreviewStyle("/static/css/post.css");
+    }
+    window.addEventListener("load", function () {
+      var loader = document.querySelector(".cms-loader");
+      if (loader) loader.remove();
+    });
+  </script>
+</body>
+</html>

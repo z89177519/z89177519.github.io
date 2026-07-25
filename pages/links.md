@@ -13,7 +13,7 @@ title: 友情链接
 ```
 
 <ul>
-  {%- for link in site.links %}
+  {%- for link in site.data.links %}
   <li>
     <p><a href="{{ link.url }}" title="{{ link.desc }}" target="_blank" rel="noopener noreferrer">{{ link.title }}</a></p>
   </li>
