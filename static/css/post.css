@@ -1,7 +1,7 @@
 .page-post {
   font-size: 16px;
   line-height: 1.8;
-  word-break: break-all;
+  overflow-wrap: break-word;
   color: var(--color-text);
 }
 .page-post .title {
@@ -239,7 +239,7 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--color-text);
-  word-break: break-all;
+  overflow-wrap: break-word;
 }
 .post-nav-item:hover .post-nav-title {
   color: var(--color-primary);
