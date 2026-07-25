@@ -32,17 +32,10 @@
   font-weight: 700;
   font-size: 20px;
   position: relative;
-  cursor: pointer;
   color: var(--color-text);
   margin-top: var(--space-xl);
   margin-bottom: var(--space-md);
-  transition: color var(--transition-normal);
 }
-.page-post .post h1:hover,
-.page-post .post h2:hover {
-  color: var(--color-primary);
-}
-
 .page-post h3,
 .page-post h4,
 .page-post h5,
